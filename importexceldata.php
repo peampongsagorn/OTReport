@@ -48,75 +48,27 @@ if (isset($_POST['save_excel_data'])) {
     // echo "<script>alert('Data uploaded successfully!')</script>";
     echo "<script>alert('Data uploaded successfully!'); window.location.href = 'dashboard.php';</script>";
 
-    // Uncomment the line below to redirect after processing
-    //echo "<meta http-equiv='refresh' content='1;URL=listemployee.php'/>";
+
 }
 
-// function processOTRecordFile($data, $conn){
-//     foreach ($data as $index => $row) {
-//         // Skip the header row
-//         if ($index === 0 || $row[0] !== 'OT') {
-//             continue;
-//         }
 
-//         $employee_id = $row[1];
-
-//         // Check if employee_id exists in the employee table
-//         $query = "SELECT * FROM employee WHERE employee_id = ?";
-//         $params = [$employee_id];
-//         $stmt = sqlsrv_query($conn, $query, $params);
-
-//         // If the employee exists, insert the data into ot_record table
-//         if ($stmt && sqlsrv_has_rows($stmt)) {
-
-
-//             $date = parseDate($row[2], false); // Date only
-//             $time_start = parseDate($row[3]); // Date and time
-//             $time_end = parseDate($row[4]); // Date and time
-
-//             $attendance_hours = $row[5];
-//             $request_time = parseDate($row[6]); // Date and time
-//             $request_msg = $row[7];
-//             $request_detail = $row[8];
-//             $reviewer_id = $row[9];
-//             $review_time = parseDate($row[10]); // Date and time
-//             $approver_id = $row[11];
-//             $approve_time = parseDate($row[12]); // Date and time
-
-
-//             $insertQuery = "INSERT INTO ot_record (employee_id, date, time_start, time_end, attendance_hours, request_time, request_msg, request_detail, reviewer_id, reviewer_time, approver_id, approve_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-//             $insertParams = [$employee_id, $date, $time_start, $time_end, $attendance_hours, $request_time, $request_msg, $request_detail, $reviewer_id, $review_time, $approver_id, $approve_time];
-//             $insertStmt = sqlsrv_query($conn, $insertQuery, $insertParams);
-
-//             // Check for errors in the insert query
-//             if (!$insertStmt) {
-//                 die(print_r(sqlsrv_errors(), true));
-//             }
-//         } else {
-//             // Employee ID does not exist in employee table, skip this record
-//             continue;
-//         }
-//     }
-//     // ... any additional code needed for post-processing or error handling
-// }
 
 function processOTRecordFile($data, $conn)
 {
     // วนลูปผ่านข้อมูลที่ได้รับจากไฟล์ Excel
     foreach ($data as $index => $row) {
-        // Skip the header row and rows that do not start with 'OT'
+
         if ($index === 0 || $row[0] !== 'OT') {
             continue;
         }
 
         $employee_id = $row[1];
 
-        // Check if employee_id exists in the employee table
         $query = "SELECT * FROM employee WHERE employee_id = ?";
         $params = [$employee_id];
         $stmt = sqlsrv_query($conn, $query, $params);
 
-        // If the employee exists, proceed with the insertion
+
         if ($stmt && sqlsrv_has_rows($stmt)) {
             // Insert data into ot_record_upload table
             $insertUploadQuery = "INSERT INTO ot_record_upload (employee_id, date, time_start, time_end, attendance_hours, request_time, request_msg, request_detail, reviewer_id, reviewer_time, approver_id, approve_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -136,12 +88,10 @@ function processOTRecordFile($data, $conn)
             ];
             $insertUploadStmt = sqlsrv_query($conn, $insertUploadQuery, $uploadParams);
 
-            // Check for errors in the insert query
             if (!$insertUploadStmt) {
                 die(print_r(sqlsrv_errors(), true));
             }
         } else {
-            // Employee ID does not exist in employee table, skip this record
             continue;
         }
     }
@@ -154,12 +104,10 @@ function processOTRecordFile($data, $conn)
                   WHERE e.PLGROUP = 'ป'";
     $moveStmt = sqlsrv_query($conn, $moveQuery);
 
-    // ตรวจสอบข้อผิดพลาดในการย้ายข้อมูล
     if (!$moveStmt) {
         die(print_r(sqlsrv_errors(), true));
     }
 
-    // ลบข้อมูลทั้งหมดใน ot_record_upload เพื่อเตรียมพื้นที่สำหรับการอัพโหลดครั้งต่อไป
     $deleteQuery = "DELETE FROM ot_record_upload";
     $deleteStmt = sqlsrv_query($conn, $deleteQuery);
 
@@ -173,21 +121,17 @@ function processOTRecordFile($data, $conn)
 
 function processOTPlanFile($data, $conn) {
     foreach ($data as $index => $row) {
-        if ($index === 0) continue; // ข้ามแถวแรกซึ่งเป็นหัวตาราง
+        if ($index === 0) continue;
 
-        $costcenter_code = $row[1]; // ได้รับรหัส costcenter จากไฟล์ Excel
+        $costcenter_code = $row[1]; 
 
-        // ค้นหาในฐานข้อมูลเพื่อหา cost_center_id ที่ตรงกับรหัส
         $checkQuery = "SELECT cost_center_id FROM costcenter WHERE cost_center_code = ?";
         $checkStmt = sqlsrv_query($conn, $checkQuery, [$costcenter_code]);
 
-        // ตรวจสอบว่ามีข้อมูลในฐานข้อมูลหรือไม่
         if ($checkStmt && $fetchedRow = sqlsrv_fetch_array($checkStmt, SQLSRV_FETCH_ASSOC)) {
-            $costcenter_id = $fetchedRow['cost_center_id']; // ใช้ cost_center_id ที่ได้จากการ query
+            $costcenter_id = $fetchedRow['cost_center_id']; 
 
-            // ตรวจสอบว่าข้อมูลในแถวนั้นครบถ้วนหรือไม่
             if (isset($row[4],$row[5], $row[6], $row[7], $row[8], $row[9], $row[10], $row[11], $row[12], $row[13], $row[14], $row[15], $row[16], $row[17])) {
-                // ดำเนินการบันทึกข้อมูล
                 $month = $row[5];
                 $year = $row[4];
                 $fix1 = $row[6];
@@ -205,12 +149,11 @@ function processOTPlanFile($data, $conn) {
                 $budget = $row[18];
                 $salary = $row[19];
 
-                // สร้างคำสั่ง SQL สำหรับการบันทึกข้อมูล
+
                 $insertQuery = "INSERT INTO ot_plan (costcenter_id, month, year, fix1, fix2, fix3, nonfix, people, working_day, dayoff, sum_fix, total_hours, plan_fix_percent, plan_nonfix_percent, plan_total_hours_percent, budget, salary) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
                 $insertParams = [$costcenter_id, $month, $year, $fix1, $fix2, $fix3, $nonfix, $people_plan, $working_day, $dayoff, $plan_fix_all, $plan_total_hours, $plan_fix_percent, $plan_nonfix_percent, $plan_total_hours_percent, $budget, $salary];
                 $insertStmt = sqlsrv_query($conn, $insertQuery, $insertParams);
 
-                // ตรวจสอบข้อผิดพลาดในคำสั่ง insert
                 if (!$insertStmt) {
                     echo "Error while inserting data: " . print_r(sqlsrv_errors(), true);
                 }
@@ -226,10 +169,9 @@ function processOTPlanFile($data, $conn) {
 
 function processEmployeeFile($data, $conn) {
     foreach ($data as $index => $row) {
-        if ($index === 0) continue; // Skip header row
+        if ($index === 0) continue; 
 
-        // Assume columns are as follows:
-        // A: Employee ID, B: Name, C: Department, D: Position, E: Email, H: Costcenter code
+
         $employee_id = $row[0];
         $name_title_t = $row[1];
         $firstname_t = $row[2];
@@ -258,12 +200,7 @@ function processEmployeeFile($data, $conn) {
         $subsection = $row[25];
         $division = $row[26];
 
-        // if ($plgroup !== 'ป') {
-        //     echo "PLGROUP is not 'ป'. Skipping row $index.\n";
-        //     continue;
-        // }
-
-
+    
         // Check if costcenter exists
         $costcenterQuery = "SELECT cost_center_id FROM costcenter WHERE cost_center_code = ?";
         $costcenterParams = [$costcenter_code];
@@ -304,8 +241,7 @@ function processEmployeeFile($data, $conn) {
                 }
             }
         } else {
-            // costcenter_code does not exist, skip this row
-            //echo "Costcenter code: $costcenter_code not found. Skipping row $index.\n";
+            
             continue;
         }
     }
