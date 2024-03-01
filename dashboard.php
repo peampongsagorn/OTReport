@@ -16,7 +16,7 @@ session_start();
                 <div style="max-width: 1000px; width: auto; margin: auto; justify-content: center; display: flex; align-items: center;">
                     <div class="container-fluid" style="background-color: white; padding: 15px; margin-bottom: 20px; border: 2px solid #3E4080; border-radius: 15px; box-shadow: 5px 5px 5px #3E4080;">
                         <div class="row" style="justify-content: center;">
-                            <div class="col-md-3 mb-5 d-flex">
+                            <div class="col-md-3 mb-2 d-flex">
                                 <?php include('./Chart/chart_cal_percent.php') ?>
                                 <div class="card custom-card text-white" style="background-color: #41446B; flex-grow: 1; border-radius: 15px; box-shadow: 2px 4px 5px #3E4080">
                                     <div class="card-header text-center" style="background-color: #313456; border-top-right-radius: 15px; border-top-left-radius: 15px;">
@@ -31,7 +31,7 @@ session_start();
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-3 mb-5 d-flex">
+                            <div class="col-md-3 mb-2 d-flex">
                                 <div class="card custom-card text-white" style="background-color: #41446B; flex-grow: 1; border-radius: 15px; box-shadow: 2px 4px 5px #3E4080">
                                     <div class="card-header text-center" style="background-color: #313456; border-top-right-radius: 15px; border-top-left-radius: 15px;">
                                         Actual % Normal Time
@@ -45,7 +45,7 @@ session_start();
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-3 mb-5 d-flex">
+                            <div class="col-md-3 mb-2 d-flex">
                                 <div class="card custom-card text-white" style="background-color: #41446B ; flex-grow: 1; border-radius: 15px; box-shadow: 2px 4px 5px <?php echo $colorClass ?>">
                                     <div class="card-header text-center" style="background-color: #313456; border-top-right-radius: 15px; border-top-left-radius: 15px;">
                                         Percentage
@@ -63,14 +63,25 @@ session_start();
                         </div>
                     </div>
                 </div>
-                <div class="row justify-content-start">
-                    <?php include('./Chart/chart_ot_type.php') ?>
-                    <?php include('./Chart/chart_ot_per_person_per_day.php') ?>
+                <div class="row justify-content-center">
+                    <div class="col-md-auto">
+                        <?php include('./Chart/chart_ot_type.php') ?>
+                    </div>
+                    <div class="col-md-auto">
+                        <?php include('./Chart/chart_plan_actual.php') ?>
+                    </div>
                 </div>
-                <div class="row justify-content-start">
-                    <?php include('./Chart/chart_top10.php') ?><br>
-                    <?php include('./Chart/chart_plan_actual.php') ?><br>
-                    
+                
+                <div class="row justify-content-center">
+                    <div class="col-md-auto">
+                        <?php include('./Chart/chart_top10.php') ?>
+                    </div>
+                </div>
+
+                <div class="row justify-content-center">
+                    <div class="col-md-auto">
+                        <?php include('./Chart/chart_ot_per_person_per_day.php') ?>
+                    </div>
                 </div>
             </div>
         </div>

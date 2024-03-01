@@ -38,7 +38,7 @@
             color: white;
             display: flex;
             align-items: center;
-            justify-content: start;
+            justify-content: center;
             padding: 10px 0;
         }
         .header-form {
