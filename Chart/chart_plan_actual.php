@@ -1,5 +1,5 @@
 <?php
-session_start();
+//session_start();
 require_once('./connection.php');
 
 $currentYear = date('Y');
@@ -209,9 +209,6 @@ if ($result) {
         $chartData[] = $row;
     }
 }
-
-
-
 ?>
 
 
@@ -224,10 +221,31 @@ if ($result) {
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
+    <style>
+        /* สไตล์สำหรับ container ของ canvas */
+        .chart-container-donut {
+            position: relative;
+            /* สำคัญสำหรับการ positioning ของ canvas */
+            margin: auto;
+            height: 60vh;
+            /* หรือคุณสามารถใช้ px แทน vh */
+            width: 60vw;
+            /* หรือคุณสามารถใช้ px แทน vw */
+            border: 2px solid #3E4080;
+            box-shadow: 2px 4px 5px #3E4080;
+        }
+    </style>
 </head>
 
+
+
+
 <body>
-    <canvas id="otChart"></canvas>
+    <div class="col-md-auto" style="padding: 0; margin: 5px;">
+        <div class="chart-container-donut">
+            <canvas id="otChart"></canvas>
+        </div>
+    </div>
     <script>
         var ctx = document.getElementById('otChart').getContext('2d');
         var chartData = <?php echo json_encode($chartData); ?>;
@@ -262,6 +280,16 @@ if ($result) {
                 }]
             },
             options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                title: {
+                    display: true,
+                    text: 'PLAN HOURS AND ACTUAL HOURS',
+                    font: {
+                        weight: 'bold',
+                        size: 20
+                    },
+                },
                 scales: {
                     yAxes: [{
                         id: 'y-axis-1',

@@ -128,100 +128,7 @@ if ($totalOTPercentForActual > 0) {
 $chartDataJson = json_encode($chartData);
 ?>
 
-<!-- <!DOCTYPE html>
-<html>
 
-<head>
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
-    <script type="text/javascript">
-        google.charts.load('current', {
-            'packages': ['bar']
-        });
-        google.charts.setOnLoadCallback(drawChart);
-
-        function drawChart() {
-            var data = new google.visualization.DataTable();
-            data.addColumn('string', 'Department/Section');
-            data.addColumn('number', 'Average OT Per Person');
-
-            var chartData = JSON.parse('<?php echo $chartDataJson; ?>');
-            chartData.forEach(function(row) {
-                data.addRow([row.name, parseFloat(row.average_ot)]);
-            });
-
-            var options = {
-                responsive: true,
-                maintainAspectRatio: false,
-                chart: {
-                    title: 'Average OT Per Person Actual'
-                },
-                backgroundColor: '#1C1D3A',
-                chartArea: {
-                    backgroundColor: '#1C1D3A',
-                    // กำหนด padding หรือ margin ถ้าจำเป็น
-                },
-                bars: 'horizontal',
-                hAxis: {
-                    format: 'decimal'
-                },
-                height: 400,
-                colors: ['#1b9e77', '#d95f02', '#7570b3'],
-                legend: {
-                    position: 'top', // ตั้งค่าตำแหน่งของ legend
-                    textStyle: {
-                        color: 'white', // ตั้งค่าสีของตัวอักษร
-                        fontSize: 12 // ตั้งค่าขนาดของตัวอักษร
-                    }
-                },
-                vAxis: {
-                    title: 'ชั่วโมง',
-                    textStyle: {
-                        color: 'white'
-                    } // กำหนดสีข้อความของแกน Y
-                },
-                hAxis: {
-                    title: 'เดือน',
-                    textStyle: {
-                        color: 'white'
-                    } // กำหนดสีข้อความของแกน X
-                },
-                titleTextStyle: {
-                    color: 'white', // กำหนดสีหัวข้อของกราฟ
-                    fontSize: 16,
-                    bold: true
-                },
-            };
-
-
-            var chart = new google.charts.Bar(document.getElementById('barchart_material'));
-            chart.draw(data, google.charts.Bar.convertOptions(options));
-        }
-    </script>
-    <style>
-    .chart-container-bar {
-    position: relative;
-    margin: auto;
-    height: 60vh;
-    width: 60vw;
-    border: 2px solid #3E4080;
-    box-shadow: 2px 4px 5px #3E4080;
-    }
-    </style>
-</head>
-
-<body>
-
-    <div class="col-md-auto" style="padding: 0; margin: 5px;">
-        <div class="chart-container-bar">
-            <div id="barchart_material"></div>
-        </div>
-    </div>
-</body>
-
-</html> -->
 
 <!DOCTYPE html>
 <html>
@@ -229,6 +136,8 @@ $chartDataJson = json_encode($chartData);
     <meta charset="utf-8">
     <title>Average OT Per Person Actual</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>    
     <style>
         .chart-container-bar {
             position: relative;

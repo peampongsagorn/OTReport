@@ -132,21 +132,7 @@ foreach ($top10Employees as &$employee) {
 }
 unset($employee); // ลบการอ้างอิงเมื่อเสร็จสิ้นการใช้งาน
 
-// แสดงผลในรูปแบบตาราง HTML
-// echo "<table border='1'>";
-// echo "<tr>
-//         <th>Full Name</th>
-//         <th>Department</th>
-//         <th>Total Hours</th>
-//         <th>จำนวนครั้งที่ทำ OT เกิน 36 ชม/สัปดาห์</th>
-//         <th>OT FIX</th>
-//         <th>OT NONFIX</th>
-//         <th>AVG OT/Day</th> <!-- เพิ่มคอลัมน์ใหม่ -->
-//       </tr>";
 
-// foreach ($top10Employees as $employee) {
-//     // คำนวณค่าเฉลี่ยชั่วโมง OT ต่อวัน
-//     $avgOtPerDay = $totalWorkingDays > 0 ? $employee['TOTAL_HOURS'] / $totalWorkingDays : 0;
 
 ?>
 
@@ -162,6 +148,7 @@ unset($employee); // ลบการอ้างอิงเมื่อเส�
 
         thead th {
             font-size: 14px;
+            
         }
 
         tbody {
@@ -171,13 +158,14 @@ unset($employee); // ลบการอ้างอิงเมื่อเส�
         th,
         td {
             padding: 3px;
+            text-align: center;
         }
     </style>
 
 </head>
 
 <body>
-    <table class="data-table2 table striped hover nowrap" style="width: 100%; border-collapse: collapse; border: 2px solid #3E4080; box-shadow: 2px 4px 5px #3E4080; height: 100%">
+    <table class="data-table2 table striped hover nowrap" style="width: 100%; border-collapse: collapse; border: 2px solid #3E4080; box-shadow: 2px 4px 5px #3E4080; height: 100%; margin-top:10px">
         <thead style="background-color: #1C1D3A; color: white;">
             <tr>
                 <th>Full Name</th>

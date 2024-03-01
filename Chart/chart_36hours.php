@@ -190,78 +190,64 @@ if ($stmt === false) {
     die(print_r(sqlsrv_errors(), true));
 }
 
-// เริ่มต้นตาราง HTML
-
-
-echo "<table border='1'>";
-echo "<tr><th>Division/Section/Department Name</th><th>Employees Exceeding 36 Hours</th></tr>";
-
-// วนลูปผ่านผลลัพธ์ที่ได้จากการ query และแสดงข้อมูลในแต่ละแถวของตาราง
+$employeeOTData = [];
 while($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
-    echo "<tr>";
-    echo "<td>" . $row['name'] . "</td>"; // แสดงชื่อหน่วยงาน (อาจเป็น Division, Section, หรือ Department ตามเงื่อนไข filter)
-    echo "<td>" . $row['EmployeesExceeding36Hours'] . "</td>"; // แสดงจำนวนพนักงานที่ทำงานเกิน 36 ชั่วโมง
-    echo "</tr>";
+    $employeeOTData[] = $row; // เก็บข้อมูลลงในอาร์เรย์
 }
 
-echo "</table>";
-
-
+// เรียงลำดับข้อมูลตามจำนวนครั้งที่ทำ OT เกิน 36 ชั่วโมง
+usort($employeeOTData, function($a, $b) {
+    return $b['EmployeesExceeding36Hours'] <=> $a['EmployeesExceeding36Hours'];
+});
 
 ?>
 
 
-<!-- <html>
 
+<html>
 <head>
     <style>
         .table {
             width: 90%;
             margin: auto;
+            border-collapse: collapse;
+            border: 2px solid #3E4080;
+            box-shadow: 2px 4px 5px #3E4080;
         }
 
         thead th {
             font-size: 14px;
-        }
-
-        tbody {
-            font-size: 12px;
-        }
-
-        th,
-        td {
+            background-color: #1C1D3A;
+            color: white;
             padding: 3px;
+            text-align: center;
+        }
+
+        tbody td {
+            font-size: 12px;
+            background-color: #D4E8E5;
+            color: #757575;
+            padding: 3px;
+            text-align: center;
         }
     </style>
-
 </head>
-
 <body>
-    <table class="data-table2 table striped hover nowrap" style="width: 100%; border-collapse: collapse; border: 2px solid #3E4080; box-shadow: 2px 4px 5px #3E4080; height: 100%">
-        <thead style="background-color: #1C1D3A; color: white;">
+<table class="table">
+        <thead>
             <tr>
-                <th>Department</th>
-
-                <th>จำนวนครั้งที่ทำ OT เกิน 36 ชม/สัปดาห์</th>
-
+                <th>Division/Department/Section Name</th>
+                <th>Employees Exceeding 36 Hours</th>
             </tr>
         </thead>
         <tbody>
-            <?php
-            foreach ($top10Employees as $employee) {
-                $avgOtPerDay = $totalWorkingDays > 0 ? $employee['TOTAL_HOURS'] / $totalWorkingDays : 0;
-                echo '<tr style="background-color: #D4E8E5; color: #757575;">';
-                
-                echo '<td>' . htmlspecialchars($employee['DEPARTMENT']) . '</td>';    
-  
-                echo '<td>' . htmlspecialchars($employee['OT_EXCEEDS']) . '</td>';    
-
-                echo '</tr>';
-            }
-            ?>
+            <?php foreach ($employeeOTData as $employee): ?>
+                <tr>
+                    <td><?= htmlspecialchars($employee['name']) ?></td>
+                    <td><?= $employee['EmployeesExceeding36Hours'] ?></td>
+                </tr>
+            <?php endforeach; ?>
         </tbody>
     </table>
 </body>
-
-
-</html> -->
+</html>
