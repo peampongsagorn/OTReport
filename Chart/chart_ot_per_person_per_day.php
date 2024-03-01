@@ -128,13 +128,18 @@ if ($totalOTPercentForActual > 0) {
 $chartDataJson = json_encode($chartData);
 ?>
 
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html>
 
 <head>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
     <script type="text/javascript">
-        google.charts.load('current', { 'packages': ['bar'] });
+        google.charts.load('current', {
+            'packages': ['bar']
+        });
         google.charts.setOnLoadCallback(drawChart);
 
         function drawChart() {
@@ -143,19 +148,25 @@ $chartDataJson = json_encode($chartData);
             data.addColumn('number', 'Average OT Per Person');
 
             var chartData = JSON.parse('<?php echo $chartDataJson; ?>');
-            chartData.forEach(function (row) {
+            chartData.forEach(function(row) {
                 data.addRow([row.name, parseFloat(row.average_ot)]);
             });
 
             var options = {
-                chart: { title: 'Average OT Per Person Actual' },
+                responsive: true,
+                maintainAspectRatio: false,
+                chart: {
+                    title: 'Average OT Per Person Actual'
+                },
                 backgroundColor: '#1C1D3A',
                 chartArea: {
                     backgroundColor: '#1C1D3A',
                     // กำหนด padding หรือ margin ถ้าจำเป็น
                 },
                 bars: 'horizontal',
-                hAxis: { format: 'decimal' },
+                hAxis: {
+                    format: 'decimal'
+                },
                 height: 400,
                 colors: ['#1b9e77', '#d95f02', '#7570b3'],
                 legend: {
@@ -167,11 +178,15 @@ $chartDataJson = json_encode($chartData);
                 },
                 vAxis: {
                     title: 'ชั่วโมง',
-                    textStyle: { color: 'white' } // กำหนดสีข้อความของแกน Y
+                    textStyle: {
+                        color: 'white'
+                    } // กำหนดสีข้อความของแกน Y
                 },
                 hAxis: {
                     title: 'เดือน',
-                    textStyle: { color: 'white' } // กำหนดสีข้อความของแกน X
+                    textStyle: {
+                        color: 'white'
+                    } // กำหนดสีข้อความของแกน X
                 },
                 titleTextStyle: {
                     color: 'white', // กำหนดสีหัวข้อของกราฟ
@@ -179,16 +194,86 @@ $chartDataJson = json_encode($chartData);
                     bold: true
                 },
             };
-            
+
 
             var chart = new google.charts.Bar(document.getElementById('barchart_material'));
             chart.draw(data, google.charts.Bar.convertOptions(options));
         }
     </script>
+    <style>
+    .chart-container-bar {
+    position: relative;
+    margin: auto;
+    height: 60vh;
+    width: 60vw;
+    border: 2px solid #3E4080;
+    box-shadow: 2px 4px 5px #3E4080;
+    }
+    </style>
 </head>
 
 <body>
-    <div id="barchart_material" style="border: 2px solid #3E4080; box-shadow: 2px 4px 5px #3E4080; width: 40%; height: 100%;"></div>
+
+    <div class="col-md-auto" style="padding: 0; margin: 5px;">
+        <div class="chart-container-bar">
+            <div id="barchart_material"></div>
+        </div>
+    </div>
 </body>
 
+</html> -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Average OT Per Person Actual</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .chart-container-bar {
+            position: relative;
+            margin: auto;
+            height: 60vh; /* คุณสามารถปรับขนาดตามที่ต้องการ */
+            width: 80vw; /* คุณสามารถปรับขนาดตามที่ต้องการ */
+        }
+    </style>
+</head>
+<body>
+
+<div class="chart-container-bar">
+    <canvas id="barChart"></canvas>
+</div>
+
+<script>
+    var chartData = <?php echo $chartDataJson; ?>; // ตัวอย่างข้อมูลจากเซิร์ฟเวอร์
+
+    var ctx = document.getElementById('barChart').getContext('2d');
+    var barChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: chartData.map(function(item) { return item.name; }), // ปรับให้เหมาะสมกับชื่อแต่ละแผนกหรือส่วนงาน
+            datasets: [{
+                label: 'Average OT Per Person',
+                data: chartData.map(function(item) { return item.average_ot; }), // ปรับให้เหมาะสมกับข้อมูล
+                backgroundColor: 'rgba(0, 123, 255, 0.5)',
+                borderColor: 'rgba(0, 123, 255, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            },
+            responsive: true,
+            maintainAspectRatio: false
+        }
+    });
+</script>
+
+</body>
 </html>
+
