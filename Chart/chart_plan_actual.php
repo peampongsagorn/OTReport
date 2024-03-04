@@ -223,16 +223,14 @@ if ($result) {
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
     <style>
         /* สไตล์สำหรับ container ของ canvas */
-        .chart-container-donut {
+        .chart-container-ot {
             position: relative;
-            /* สำคัญสำหรับการ positioning ของ canvas */
             margin: auto;
-            height: 60vh;
-            /* หรือคุณสามารถใช้ px แทน vh */
-            width: 60vw;
-            /* หรือคุณสามารถใช้ px แทน vw */
+            height: 45vh;
+            width: 63vw;
             border: 2px solid #3E4080;
             box-shadow: 2px 4px 5px #3E4080;
+            border-radius: 25px;
         }
     </style>
 </head>
@@ -242,7 +240,7 @@ if ($result) {
 
 <body>
     <div class="col-md-auto" style="padding: 0; margin: 5px;">
-        <div class="chart-container-donut">
+        <div class="chart-container-ot">
             <canvas id="otChart"></canvas>
         </div>
     </div>

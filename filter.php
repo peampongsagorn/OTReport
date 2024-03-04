@@ -51,16 +51,7 @@ if (isset($_POST['submit'])) {
         'type' => $_POST['otTypeID'] ?? null
     ];
 
-    // if (isset($_SESSION['filter'])) {
-    //     echo "<h3>Submitted Filter Data:</h3>";
-    //     echo "<p>Start Month Date: " . $_SESSION['filter']['startMonthDate'] . "</p>";
-    //     echo "<p>End Month Date (December): " . $_SESSION['filter']['endMonthDateDecember'] . "</p>";
-    //     echo "<p>End Month Date (Current): " . $_SESSION['filter']['endMonthDateCurrent'] . "</p>";
-    //     echo "<p>Division ID: " . ($_SESSION['filter']['divisionId'] ?? 'Not Provided') . "</p>";
-    //     echo "<p>Department ID: " . ($_SESSION['filter']['departmentId'] ?? 'Not Provided') . "</p>";
-    //     echo "<p>Section ID: " . ($_SESSION['filter']['sectionId'] ?? 'Not Provided') . "</p>";
-    //     echo "<p>OT Type: " . ($_SESSION['filter']['type'] ?? 'Not Provided') . "</p>";
-    // }
+
 }
 ?>
 
@@ -70,7 +61,7 @@ if (isset($_POST['submit'])) {
 
 
 <body>
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#filterModal" style="margin-right: 10px">
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#filterModal" style="margin-right: 10px;">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-filter" viewBox="0 0 16 16">
             <path d="M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5" />
         </svg>

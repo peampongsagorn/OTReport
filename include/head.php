@@ -6,46 +6,54 @@
     <meta charset="utf-8">
     <title>OT Plan Actual Report</title>
 
-    <!-- Site favicon -->
-    <!-- <link rel="icon" type="image/ico" href="../favicon.ico"> -->
-
-    <!-- Mobile Specific Metas -->
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 
-    <!-- CSS :  -->
-    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-
-    <script src="../../asset/plugins/sweetalert2-11.10.1/jquery-3.7.1.min.js"></script>
-    <script src="../../asset/plugins/sweetalert2-11.10.1/sweetalert2.all.min.js"></script>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../../asset/plugins/sweetalert2-11.10.1/sweetalert2.all.min.js"></script>
 
-
-    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-        integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
     <style>
         .header-container {
-            /* background-color: #d9534f; */
-            /* background: rgb(73, 179, 225);
-            background: linear-gradient(90deg, rgba(73, 179, 225, 1) 0%, rgba(108, 211, 220, 1) 50%, rgba(73, 179, 225, 1) 100%); */
-
             color: white;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 10px 0;
         }
+
+        .header-form .filter {
+            order: 2;
+            justify-content: end;
+            /* กำหนดให้แสดงผลเป็นอันดับที่ 2 */
+        }
+
+        .header-form .form-upload {
+            order: 3;
+            justify-content: end;
+            /* กำหนดให้แสดงผลเป็นอันดับที่ 3 */
+        }
+
+        .header-form .search-data {
+            order: 1;
+            align-self: center;
+            /* กำหนดให้แสดงผลเป็นอันดับแรก */
+        }
+
         .header-form {
             /* background-color: #d9534f; */
             display: flex;
             align-items: center;
-            justify-content: end;
+            justify-content: flex-start;
+            padding: 10px 0;
+        }
+
+        .header-search {
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
             padding: 10px 0;
         }
 
@@ -84,18 +92,13 @@
         }
 
         .pd-ltr-20 {
-            display: flex;
             justify-content: space-between;
             align-items: start;
+            display: flex;
+
         }
 
-        /* .upper-box {
-        flex-grow: 1; 
-        flex-basis: calc(25% - 10px); 
-        margin: 5px;
-        padding: 10px;
-        box-sizing: border-box;
-        } */
+
 
         .lower-box {
             flex-grow: 2;
@@ -103,6 +106,10 @@
             margin: 5px;
             padding: 10px;
             box-sizing: border-box;
+        }
+
+        .lower-box {
+            width: 100vw;
         }
 
         @media (min-width: 768px) {
@@ -114,11 +121,7 @@
             }
         }
 
-        .upper-box,
-        .lower-box {
-            width: 100vw;
-            /* 100% of the viewport width */
-        }
+
 
         .custom-card {
             display: flex;
@@ -211,15 +214,17 @@
             cursor: pointer;
         }
 
-        
-        
+
+
         .data-table2 td {
-            border: 2px solid #757575; /* สีขอบของช่อง */
-            padding: 8px; /* ระยะห่างของเนื้อหาจากขอบ */
+            border: 2px solid #757575;
+            /* สีขอบของช่อง */
+            padding: 8px;
+            /* ระยะห่างของเนื้อหาจากขอบ */
         }
     </style>
 
 
 
-    </style>
+
 </head>

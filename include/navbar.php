@@ -6,10 +6,22 @@
                 <img src="./image/SCGlogo.png" alt="Logo" style="width: 190px; height: 60px;">
                 <span class="header-title">| OT PLAN & ACTUAL REPORT</span>
             </div>
-            <div class="col header-form">
-                <?php include('./filter.php') ?>
-                <?php include('./formupload.php') ?>
-            </div>
         </div>
     </div>
 </nav>
+
+
+
+
+
+<subnav>
+    <div class="container-fluid">
+        <div class="row" style=" background: #E7F6F2">
+            <div class="col header-form">
+                <div class="item filter"><?php include('./filter.php') ?></div>
+                <div class="item form-upload"><?php include('./formupload.php') ?></div>
+                <div class="item search-data"><?php include('./Chart/search_data.php') ?><br></div>
+            </div>
+        </div>
+    </div>
+</subnav>

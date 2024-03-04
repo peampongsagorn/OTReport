@@ -120,7 +120,7 @@ usort($employeeOTData, function ($a, $b) {
 });
 
 // เลือกพนักงาน 10 คนแรก
-$top10Employees = array_slice($employeeOTData, 0, 10);
+$top10Employees = array_slice($employeeOTData, 0, 50);
 
 // คำนวณเปอร์เซ็นต์และรูปแบบข้อมูลชั่วโมงพร้อมเปอร์เซ็นต์ในวงเล็บ
 foreach ($top10Employees as &$employee) {
@@ -148,7 +148,7 @@ unset($employee); // ลบการอ้างอิงเมื่อเส�
 
         thead th {
             font-size: 14px;
-            
+
         }
 
         tbody {
@@ -160,63 +160,121 @@ unset($employee); // ลบการอ้างอิงเมื่อเส�
             padding: 3px;
             text-align: center;
         }
+
+        .chart-container-table {
+
+            border: 2px solid #3E4080;
+            box-shadow: 2px 4px 5px #3E4080;
+            border-radius: 25px;
+        }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+            background-color: #4CAF50;
+            /* สีพื้นหลังใหม่ที่คุณต้องการ */
+            color: white !important;
+        }
+
+        /* สไตล์สำหรับเมื่อปุ่มลูกศร active หรือ focused */
+        .dataTables_wrapper .dataTables_paginate .paginate_button:active,
+        .dataTables_wrapper .dataTables_paginate .paginate_button:focus {
+            background-color: #4CAF50 !important;
+            /* สีเดียวกับที่ใช้ใน hover */
+            color: white !important;
+        }
+
+        .dataTables_top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        /* ให้ข้อความ "ค้นหา:" และช่องค้นหาอยู่ในแถวเดียวกัน */
+        .dataTables_filter label {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0;
+            /* ลบ margin ด้านล่างออกเพื่อให้ align กับ dropdown */
+        }
+
+        .dataTables_filter input {
+            margin-left: 0.5em;
+            /* กำหนดระยะห่างระหว่างข้อความ "ค้นหา:" กับช่องค้นหา */
+        }
     </style>
 
 </head>
 
 <body>
-    <table class="data-table2 table striped hover nowrap" style="width: 100%; border-collapse: collapse; border: 2px solid #3E4080; box-shadow: 2px 4px 5px #3E4080; height: 100%; margin-top:10px">
-        <thead style="background-color: #1C1D3A; color: white;">
-            <tr>
-                <th>Full Name</th>
-                <th>Department</th>
-                <th>Total Hours</th>
-                <th>จำนวนครั้งที่ทำ OT เกิน 36 ชม/สัปดาห์</th>
-                <th>OT FIX</th>
-                <th>OT NONFIX</th>
-                <th>AVG OT/Day</th> <!-- เพิ่มคอลัมน์ใหม่ -->
-            </tr>
-        </thead>
-        <tbody>
-            <?php
-            foreach ($top10Employees as $employee) {
-                $avgOtPerDay = $totalWorkingDays > 0 ? $employee['TOTAL_HOURS'] / $totalWorkingDays : 0;
-                echo '<tr style="background-color: #D4E8E5; color: #757575;">';
-                echo '<td>' . htmlspecialchars($employee['EMPLOYEE_NAME']) . '</td>';    
-                echo '<td>' . htmlspecialchars($employee['DEPARTMENT']) . '</td>';    
-                echo '<td>' . number_format($employee['TOTAL_HOURS'], 2) . '</td>';    
-                echo '<td>' . htmlspecialchars($employee['OT_EXCEEDS']) . '</td>';    
-                echo '<td>' . htmlspecialchars($employee['FIX']) . '</td>';    
-                echo '<td>' . htmlspecialchars($employee['NONFIX']) . '</td>';    
-                echo '<td>' . number_format($avgOtPerDay, 2) . '</td>';    
-                echo '</tr>';
-            }
-            ?>
-        </tbody>
-    </table>
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.1/css/dataTables.dataTables.css" />
+    <script src="https://cdn.datatables.net/2.0.1/js/dataTables.js"></script>
+    <div class="chart-container-table">
+        <div class="dataTables_top">
+            <div class="dataTables_length"></div>
+            <div class="dataTables_filter"></div>
+        </div>
+        <table class="data-table table striped hover nowrap" style="width: 100%; border-collapse: collapse; border: 2px solid #3E4080; box-shadow: 2px 4px 5px #3E4080; height: 100%; margin-top:10px">
+            <thead style="background-color: #1C1D3A; color: white;">
+                <tr>
+                    <th>Full Name</th>
+                    <th>Department</th>
+                    <th>Total Hours</th>
+                    <th>จำนวนครั้งที่ทำ OT เกิน 36 ชม/สัปดาห์</th>
+                    <th>OT FIX</th>
+                    <th>OT NONFIX</th>
+                    <th>AVG OT/Day</th> <!-- เพิ่มคอลัมน์ใหม่ -->
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                foreach ($top10Employees as $employee) {
+                    $avgOtPerDay = $totalWorkingDays > 0 ? $employee['TOTAL_HOURS'] / $totalWorkingDays : 0;
+                    echo '<tr style="background-color: #D4E8E5; color: #757575;">';
+                    echo '<td>' . htmlspecialchars($employee['EMPLOYEE_NAME']) . '</td>';
+                    echo '<td>' . htmlspecialchars($employee['DEPARTMENT']) . '</td>';
+                    echo '<td>' . number_format($employee['TOTAL_HOURS'], 0) . '</td>';
+                    echo '<td>' . htmlspecialchars($employee['OT_EXCEEDS']) . '</td>';
+                    echo '<td>' . (is_numeric($employee['FIX']) ? number_format($employee['FIX'], 0) : $employee['FIX']) . '</td>';
+                    echo '<td>' . (is_numeric($employee['NONFIX']) ? number_format($employee['NONFIX'], 0) : $employee['NONFIX']) . '</td>';
+                    echo '<td>' . number_format($avgOtPerDay, 2) . '</td>';
+                    echo '</tr>';
+                }
+                ?>
+            </tbody>
+        </table>
+    </div>
 </body>
 
 
-<script>
+<!-- <script>
     $(document).ready(function() {
         // Initialize DataTable with custom options
         var dataTable = $('.data-table2').DataTable({
-            "lengthMenu": [4, 5, 6, 7, 8], // เลือกจำนวนแถวที่แสดง
-            "pageLength": 5, // จำนวนแถวที่แสดงต่อหน้าเริ่มต้น
+            "lengthMenu": [10, 15, 20, 30, 50], // เลือกจำนวนแถวที่แสดง
+            "pageLength": 10, // จำนวนแถวที่แสดงต่อหน้าเริ่มต้น
             "dom": '<"d-flex justify-content-between"lf>rt<"d-flex justify-content-between"ip><"clear">', // ตำแหน่งของ elements
             "language": {
 
-                "zeroRecords": "ไม่พบข้อมูล",
-                // "info": "แสดงหน้าที่ PAGE จาก PAGES",
-                "infoEmpty": "ไม่มีข้อมูลที่แสดง",
-                "infoFiltered": "(กรองจากทั้งหมด MAX รายการ)",
-                "search": "ค้นหา:",
+                // "zeroRecords": "ไม่พบข้อมูล",
+                // "infoEmpty": "ไม่มีข้อมูลที่แสดง",
+
+                // "search": "ค้นหา:",
+                // "paginate": {
+                //     "first": "หน้าแรก",
+                //     "last": "หน้าสุดท้าย",
+                //     "next": "ถัดไป",
+                //     "previous": "ก่อนหน้า"
+                // }
+                "info": "หน้า _START_ - _END_ จากทั้งหมด _TOTAL_ รายการ",
+                "lengthMenu": "แสดง _MENU_ รายการ",
+                "search": "<a style='color: #7a7a7a'><i class='fa-solid fa-magnifying-glass' ></i> ค้นหา : </a>",
                 "paginate": {
-                    "first": "หน้าแรก",
-                    "last": "หน้าสุดท้าย",
-                    "next": "ถัดไป",
-                    "previous": "ก่อนหน้า"
-                }
+                    "next": '▶',
+                    "previous": '◀'
+                },
+                "infoEmpty": "ไม่มีรายการที่แสดง",
+                "infoFiltered": "(กรองจากทั้งหมด _MAX_ รายการ)",
+                searchPlaceholder: "ค้นหา",
             }
         });
 
@@ -233,7 +291,43 @@ unset($employee); // ลบการอ้างอิงเมื่อเส�
         $('input[type="search"]').on('input', function() {
             dataTable.search(this.value).draw();
         });
-    });
-</script>
+        $('.dataTables_length').appendTo('.dataTables_top');
+        $('.dataTables_filter').appendTo('.dataTables_top');
 
+    });
+</script> -->
+
+<script>
+    $(document).ready(function() {
+    $('.data-table').DataTable({
+        scrollCollapse: true,
+        autoWidth: false,
+        responsive: true,
+        columnDefs: [{
+            targets: "datatable-nosort",
+            orderable: false,
+        }],
+        "lengthMenu": [
+            [10, 20, 35, -1],
+            [10, 20, 35, "ทั้งหมด"]
+        ],
+        "language": {
+            "info": "หน้า _START_ - _END_ จากทั้งหมด _TOTAL_ รายการ",
+            "lengthMenu": "แสดง _MENU_ รายการ",
+            "search": "<span style='color: #7a7a7a'><i class='fa-solid fa-magnifying-glass'></i> ค้นหา:</span>",
+            "paginate": {
+                "next": '▶',
+                "previous": '◀'
+            },
+            "infoEmpty": "ไม่มีรายการที่แสดง",
+            "infoFiltered": "(กรองจากทั้งหมด _MAX_ รายการ)",
+            searchPlaceholder: "ค้นหา",
+        }
+    });
+
+    // ... the rest of your DataTables code ...
+});
+
+
+</script>
 </html>

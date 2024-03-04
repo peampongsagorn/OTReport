@@ -58,8 +58,7 @@ $displayNames = [
 
 
 <div class="col-auto">
-    <div class="text-white bg-dark p-2" style="color: white;background-color: #1C1D3A; text-align: center; border: 2px solid #3E4080;
-         border-radius: 15px; box-shadow: 10px 10px 10px #3E4080; white-space: nowrap;">
+    <div class="text-dark p-2" >
         ข้อมูลที่ค้นหา:
         <span style="margin-right: 10px;">ช่วงวันที่: <?php echo "{$displayStartDate} ถึง {$displayEndDate}"; ?></span>
         <?php
