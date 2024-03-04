@@ -10,6 +10,44 @@ $currentDate = date('Y-m-d'); // วันที่ปัจจุบัน
 
 $sqlConditions_actual = "date BETWEEN '{$startYear}' AND '{$currentDate}'";
 $sqlConditions_plan = "year = '{$currentYear}'"; // เงื่อนไขเริ่มต้นคือข้อมูลของปีปัจจุบัน
+$query = "SELECT 
+        COALESCE(attendance.s_name, total_hours.s_name) AS name,
+        COALESCE(SUM(attendance.attendance_hours), 0) AS attendance_hours,
+        COALESCE(SUM(total_hours.total_hours), 0) AS total_hours
+        FROM 
+        (SELECT 
+            dv.s_name,
+            SUM(ot_record.attendance_hours) as attendance_hours
+        FROM 
+            ot_record
+        INNER JOIN employee e ON ot_record.employee_id = e.employee_id
+        INNER JOIN costcenter c ON e.CostcenterID = c.cost_center_id
+        INNER JOIN [section] s ON c.section_id = s.section_id
+        INNER JOIN department d ON s.department_id = d.department_id
+        INNER JOIN division dv ON d.division_id = dv.division_id
+        WHERE {$sqlConditions_actual}
+        GROUP BY dv.s_name
+        ) attendance
+        FULL JOIN 
+        (SELECT 
+            dv.s_name,
+            CASE
+                WHEN '{$filterData['type']}' = 'OT FIX' THEN SUM(ot_plan.sum_fix)
+                WHEN '{$filterData['type']}' = 'OT NON FIX' THEN SUM(ot_plan.nonfix)
+                ELSE SUM(ot_plan.total_hours)
+            END AS total_hours
+
+        FROM 
+            ot_plan
+        INNER JOIN costcenter c ON ot_plan.costcenter_id = c.cost_center_id
+        INNER JOIN [section] s ON c.section_id = s.section_id
+        INNER JOIN department d ON s.department_id = d.department_id
+        INNER JOIN division dv ON d.division_id = dv.division_id
+        WHERE {$sqlConditions_plan}
+        GROUP BY dv.s_name
+        ) total_hours ON attendance.s_name = total_hours.s_name
+        GROUP BY COALESCE(attendance.s_name, total_hours.s_name)";
+
 
 if ($filterData) {
 
@@ -36,12 +74,7 @@ if ($filterData) {
     } else {
         $totalHoursColumn = 'SUM(ot_plan.total_hours) ';
     }
-    // $filterDataType = $filterData['type'] ?? 'default';
-    // $totalHoursColumn = match($filterDataType) {
-    //     'OT FIX' => 'SUM(ot_plan.sum_fix)',
-    //     'OT NON FIX' => 'SUM(ot_plan.nonfix)',
-    //     default => 'SUM(ot_plan.total_hours)',
-    // };
+
     if (!empty($filterData['sectionId'])) {
         $sqlConditions_actual .= " AND c.section_id = '{$filterData['sectionId']}'";
         $sqlConditions_plan .= " AND c.section_id = '{$filterData['sectionId']}'";
@@ -85,12 +118,12 @@ if ($filterData) {
         $sqlConditions_actual .= " AND s.department_id = '{$filterData['departmentId']}'";
         $sqlConditions_plan .= " AND s.department_id = '{$filterData['departmentId']}'";
         $query = "SELECT 
-                COALESCE(attendance.name, total_hours.name) AS name,
+                COALESCE(attendance.s_name, total_hours.s_name) AS name,
                 COALESCE(SUM(attendance.attendance_hours), 0) AS attendance_hours,
                 COALESCE(SUM(total_hours.total_hours), 0) AS total_hours
                 FROM 
                 (SELECT 
-                    s.name,
+                    s.s_name,
                     SUM(ot_record.attendance_hours) as attendance_hours
                 FROM 
                     ot_record
@@ -100,11 +133,11 @@ if ($filterData) {
                 INNER JOIN department d ON s.department_id = d.department_id
                 INNER JOIN division dv ON d.division_id = dv.division_id
                 WHERE {$sqlConditions_actual}
-                GROUP BY s.name
+                GROUP BY s.s_name
                 ) attendance
                 FULL JOIN 
                 (SELECT 
-                    s.name,
+                    s.s_name,
                     CASE
                         WHEN '{$filterData['type']}' = 'OT FIX' THEN SUM(ot_plan.sum_fix)
                         WHEN '{$filterData['type']}' = 'OT NON FIX' THEN SUM(ot_plan.nonfix)
@@ -117,19 +150,19 @@ if ($filterData) {
                 INNER JOIN department d ON s.department_id = d.department_id
                 INNER JOIN division dv ON d.division_id = dv.division_id
                 WHERE {$sqlConditions_plan}
-                GROUP BY s.name
-                ) total_hours ON attendance.name = total_hours.name
-                GROUP BY COALESCE(attendance.name, total_hours.name)";
+                GROUP BY s.s_name
+                ) total_hours ON attendance.s_name = total_hours.s_name
+                GROUP BY COALESCE(attendance.s_name, total_hours.s_name)";
     } elseif (!empty($filterData['divisionId'])) {
         $sqlConditions_actual .= " AND d.division_id = '{$filterData['divisionId']}'";
         $sqlConditions_plan .= " AND d.division_id = '{$filterData['divisionId']}'";
         $query = "SELECT 
-                COALESCE(attendance.name, total_hours.name) AS name,
+                COALESCE(attendance.s_name, total_hours.s_name) AS name,
                 COALESCE(SUM(attendance.attendance_hours), 0) AS attendance_hours,
                 COALESCE(SUM(total_hours.total_hours), 0) AS total_hours
                 FROM 
                 (SELECT 
-                    d.name,
+                    d.s_name,
                     SUM(ot_record.attendance_hours) as attendance_hours
                 FROM 
                     ot_record
@@ -139,11 +172,11 @@ if ($filterData) {
                 INNER JOIN department d ON s.department_id = d.department_id
                 INNER JOIN division dv ON d.division_id = dv.division_id
                 WHERE {$sqlConditions_actual}
-                GROUP BY d.name
+                GROUP BY d.s_name
                 ) attendance
                 FULL JOIN 
                 (SELECT 
-                    d.name,
+                    d.s_name,
                     CASE
                         WHEN '{$filterData['type']}' = 'OT FIX' THEN SUM(ot_plan.sum_fix)
                         WHEN '{$filterData['type']}' = 'OT NON FIX' THEN SUM(ot_plan.nonfix)
@@ -156,47 +189,46 @@ if ($filterData) {
                 INNER JOIN department d ON s.department_id = d.department_id
                 INNER JOIN division dv ON d.division_id = dv.division_id
                 WHERE {$sqlConditions_plan}
-                GROUP BY d.name
-                ) total_hours ON attendance.name = total_hours.name
-                GROUP BY COALESCE(attendance.name, total_hours.name)";
+                GROUP BY d.s_name
+                ) total_hours ON attendance.s_name = total_hours.s_name
+                GROUP BY COALESCE(attendance.s_name, total_hours.s_name)";
     } else {
         $query = "SELECT 
-                COALESCE(attendance.name, total_hours.name) AS name,
-                COALESCE(SUM(attendance.attendance_hours), 0) AS attendance_hours,
-                COALESCE(SUM(total_hours.total_hours), 0) AS total_hours
-                FROM 
-                (SELECT 
-                    dv.name,
-                    SUM(ot_record.attendance_hours) as attendance_hours
-                FROM 
-                    ot_record
-                INNER JOIN employee e ON ot_record.employee_id = e.employee_id
-                INNER JOIN costcenter c ON e.CostcenterID = c.cost_center_id
-                INNER JOIN [section] s ON c.section_id = s.section_id
-                INNER JOIN department d ON s.department_id = d.department_id
-                INNER JOIN division dv ON d.division_id = dv.division_id
-                WHERE {$sqlConditions_actual}
-                GROUP BY dv.name
-                ) attendance
-                FULL JOIN 
-                (SELECT 
-                    dv.name,
-                    CASE
-                        WHEN '{$filterData['type']}' = 'OT FIX' THEN SUM(ot_plan.sum_fix)
-                        WHEN '{$filterData['type']}' = 'OT NON FIX' THEN SUM(ot_plan.nonfix)
-                        ELSE SUM(ot_plan.total_hours)
-                    END AS total_hours
-
-                FROM 
-                    ot_plan
-                INNER JOIN costcenter c ON ot_plan.costcenter_id = c.cost_center_id
-                INNER JOIN [section] s ON c.section_id = s.section_id
-                INNER JOIN department d ON s.department_id = d.department_id
-                INNER JOIN division dv ON d.division_id = dv.division_id
-                WHERE {$sqlConditions_plan}
-                GROUP BY dv.name
-                ) total_hours ON attendance.name = total_hours.name
-                GROUP BY COALESCE(attendance.name, total_hours.name)";
+        COALESCE(attendance.s_name, total_hours.s_name) AS name,
+        COALESCE(SUM(attendance.attendance_hours), 0) AS attendance_hours,
+        COALESCE(SUM(total_hours.total_hours), 0) AS total_hours
+    FROM 
+        (SELECT 
+            dv.s_name,
+            SUM(ot_record.attendance_hours) as attendance_hours
+        FROM 
+            ot_record
+        INNER JOIN employee e ON ot_record.employee_id = e.employee_id
+        INNER JOIN costcenter c ON e.CostcenterID = c.cost_center_id
+        INNER JOIN [section] s ON c.section_id = s.section_id
+        INNER JOIN department d ON s.department_id = d.department_id
+        INNER JOIN division dv ON d.division_id = dv.division_id
+        WHERE {$sqlConditions_actual}
+        GROUP BY dv.s_name
+        ) attendance
+    FULL JOIN 
+        (SELECT 
+            dv.s_name,
+            CASE
+                WHEN '{$filterData['type']}' = 'OT FIX' THEN SUM(ot_plan.sum_fix)
+                WHEN '{$filterData['type']}' = 'OT NON FIX' THEN SUM(ot_plan.nonfix)
+                ELSE SUM(ot_plan.total_hours)
+            END AS total_hours
+        FROM 
+            ot_plan
+        INNER JOIN costcenter c ON ot_plan.costcenter_id = c.cost_center_id
+        INNER JOIN [section] s ON c.section_id = s.section_id
+        INNER JOIN department d ON s.department_id = d.department_id
+        INNER JOIN division dv ON d.division_id = dv.division_id
+        WHERE {$sqlConditions_plan}
+        GROUP BY dv.s_name
+        ) total_hours ON attendance.s_name = total_hours.s_name
+    GROUP BY COALESCE(attendance.s_name, total_hours.s_name)";
     }
 }
 

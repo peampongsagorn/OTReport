@@ -30,8 +30,8 @@ if ($filterData) {
 $sql = "SELECT 
             e.employee_id,
             CONCAT(e.FIRSTNAME_T, ' ', e.LASTNAME_T) AS EMPLOYEE_NAME,
-            d.name AS DEPARTMENT,
-            s.name AS SECTION,
+            d.s_name AS DEPARTMENT,
+            s.s_name AS SECTION,
             SUM(CASE WHEN otr.TYPE_OT = 'OT FIX' THEN otr.attendance_hours ELSE 0 END) AS FIX,
             SUM(CASE WHEN otr.TYPE_OT = 'OT NON FIX' THEN otr.attendance_hours ELSE 0 END) AS NONFIX,
             SUM(otr.attendance_hours) AS TOTAL_HOURS,
@@ -73,8 +73,8 @@ $sql = "SELECT
         GROUP BY 
             e.employee_id, 
             CONCAT(e.FIRSTNAME_T, ' ', e.LASTNAME_T),
-            d.name,
-            s.name ";
+            d.s_name,
+            s.s_name ";
 
 $stmt = sqlsrv_query($conn, $sql);
 if ($stmt === false) {
@@ -228,10 +228,10 @@ unset($employee); // ลบการอ้างอิงเมื่อเส�
                     echo '<td>' . htmlspecialchars($employee['DEPARTMENT']) . '</td>';
                     echo '<td>' . number_format($employee['TOTAL_HOURS'], 0) . '</td>';
                     echo '<td>' . htmlspecialchars($employee['OT_EXCEEDS']) . '</td>';
-                    // echo '<td>' . (is_numeric($employee['FIX']) ? number_format($employee['FIX'], 0) : $employee['FIX']) . '</td>';
-                    // echo '<td>' . (is_numeric($employee['NONFIX']) ? number_format($employee['NONFIX'], 0) : $employee['NONFIX']) . '</td>';
-                    echo '<td>' . number_format($employee['FIX'], 0) . '</td>';
-                    echo '<td>' . number_format($employee['NONFIX'], 0) . '</td>';
+                    echo '<td>' . (is_numeric($employee['FIX']) ? number_format($employee['FIX'], 0) : $employee['FIX']) . '</td>';
+                    echo '<td>' . (is_numeric($employee['NONFIX']) ? number_format($employee['NONFIX'], 0) : $employee['NONFIX']) . '</td>';
+                    // echo '<td>' . number_format($employee['FIX'], 0) . '</td>';
+                    // echo '<td>' . number_format($employee['NONFIX'], 0) . '</td>';
                     echo '<td>' . number_format($avgOtPerDay, 2) . '</td>';
                     echo '</tr>';
                 }

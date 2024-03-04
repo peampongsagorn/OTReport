@@ -12,35 +12,35 @@ $filterData = $_SESSION['filter'] ?? null;
 $sqlConditions_date = "date BETWEEN '{$startYear}' AND '{$currentDate}'";
 $sqlConditions = "";
 $sql = "SELECT 
-                    dv.name,
-                    COUNT(e.employee_id) AS EmployeesExceeding36Hours
-                FROM (
-                    SELECT 
-                        ot.employee_id, 
-                        DATEPART(ISO_WEEK, ot.date) AS WeekNumber, 
-                        SUM(ot.attendance_hours) AS WeeklyHours
-                    FROM 
-                        ot_record ot
-                    WHERE 
-                        {$sqlConditions_date}
-                    GROUP BY 
-                        ot.employee_id, 
-                        DATEPART(ISO_WEEK, ot.date)
-                    HAVING 
-                        SUM(ot.attendance_hours) > 36
-                    ) AS WeeklyOT
-                INNER JOIN 
-                    employee e ON WeeklyOT.employee_id = e.employee_id
-                INNER JOIN 
-                    costcenter cc ON e.CostcenterID = cc.cost_center_id
-                INNER JOIN
-                        section s on cc.section_id = s.section_id
-                INNER JOIN 
-                        department d ON s.department_id = d.department_id
-                INNER JOIN
-                        division dv on d.division_id = dv.division_id
-                GROUP BY 
-                    dv.name; ";
+            dv.s_name AS name,
+            COUNT(e.employee_id) AS EmployeesExceeding36Hours
+            FROM (
+            SELECT 
+                ot.employee_id, 
+                DATEPART(ISO_WEEK, ot.date) AS WeekNumber, 
+                SUM(ot.attendance_hours) AS WeeklyHours
+            FROM 
+                ot_record ot
+            WHERE 
+                {$sqlConditions_date}
+            GROUP BY 
+                ot.employee_id, 
+                DATEPART(ISO_WEEK, ot.date)
+            HAVING 
+                SUM(ot.attendance_hours) > 36
+            ) AS WeeklyOT
+            INNER JOIN 
+            employee e ON WeeklyOT.employee_id = e.employee_id
+            INNER JOIN 
+            costcenter cc ON e.CostcenterID = cc.cost_center_id
+            INNER JOIN
+            section s on cc.section_id = s.section_id
+            INNER JOIN 
+            department d ON s.department_id = d.department_id
+            INNER JOIN
+            division dv on d.division_id = dv.division_id
+            GROUP BY 
+            dv.s_name";
 
 
 //query เฉลี่ยต่อคนแต่ยังไม่หารวัน
@@ -53,7 +53,7 @@ if ($filterData) {
     if (!empty($filterData['sectionId'])) {
         $sqlConditions = "cc.section_id = '{$filterData['sectionId']}'";
         $sql = "SELECT 
-                    cc.cost_center_code,
+                    cc.cost_center_code AS name,
                     COUNT(DISTINCT e.employee_id) AS EmployeesExceeding36Hours
                 FROM (
                     SELECT 
@@ -81,7 +81,7 @@ if ($filterData) {
     } elseif (!empty($filterData['departmentId'])) {
         $sqlConditions = "s.department_id = '{$filterData['departmentId']}'";
         $sql = "SELECT 
-                    s.name,
+                    s.s_name AS name,
                     COUNT(DISTINCT e.employee_id) AS EmployeesExceeding36Hours
                 FROM (
                     SELECT 
@@ -107,11 +107,11 @@ if ($filterData) {
                 WHERE 
                     {$sqlConditions}
                 GROUP BY 
-                    s.name;";
+                    s.s_name;";
     } elseif (!empty($filterData['divisionId'])) {
         $sqlConditions = "d.division_id = '{$filterData['divisionId']}'";
         $sql = "SELECT 
-                    d.name,
+                    d.s_name AS name,
                     COUNT(e.employee_id) AS EmployeesExceeding36Hours
                 FROM (
                     SELECT 
@@ -141,11 +141,11 @@ if ($filterData) {
                 WHERE 
                         {$sqlConditions}
                 GROUP BY 
-                    d.name;
+                    d.s_name;
                         ";
     } else {
         $sql = "SELECT 
-                    dv.name,
+                    dv.s_name AS name,
                     COUNT(e.employee_id) AS EmployeesExceeding36Hours
                 FROM (
                     SELECT 
@@ -173,7 +173,7 @@ if ($filterData) {
                 INNER JOIN
                         division dv on d.division_id = dv.division_id
                 GROUP BY 
-                    dv.name; ";
+                    dv.s_name; ";
     }
 }
 

@@ -12,11 +12,11 @@ $currentDate = date('Y-m-d'); // วันที่ปัจจุบัน
 $sqlConditions_actual = "date BETWEEN '{$startYear}' AND '{$currentDate}'";
 $sqlConditions_plan = "year = '{$currentYear}'"; // เงื่อนไขเริ่มต้นคือข้อมูลของปีปัจจุบัน
 $isDepartmentSpecific = !empty($filterData['departmentId']);
-$sqlSelect = "dv.name AS NAME, SUM(otr.attendance_hours) / NULLIF(COUNT(DISTINCT(otr.employee_id)),0) AS AVERAGE_OT";
-$sqlGroupBy = "dv.name";
+$sqlSelect = "dv.s_name AS NAME, SUM(otr.attendance_hours) / NULLIF(COUNT(DISTINCT(otr.employee_id)),0) AS AVERAGE_OT";
+$sqlGroupBy = "dv.s_name";
 
-$sqlSelect1 = "dv.name AS NAME,SUM(otp.working_day) / COUNT(DISTINCT(otp.costcenter_id)) AS Working_day";
-$sqlGroupBy1 = "dv.name";
+// $sqlSelect1 = "dv.name AS NAME,SUM(otp.working_day) / COUNT(DISTINCT(otp.costcenter_id)) AS Working_day";
+// $sqlGroupBy1 = "dv.name";
 
 
 //query เฉลี่ยต่อคนแต่ยังไม่หารวัน
@@ -31,13 +31,13 @@ if ($filterData) {
         $sqlConditions_actual .= " AND cc.section_id = '{$filterData['sectionId']}'";
         $sqlGroupBy = "cc.cost_center_code";
     } elseif (!empty($filterData['departmentId'])) {
-        $sqlSelect = "s.name AS NAME, SUM(otr.attendance_hours) / NULLIF(COUNT(DISTINCT(otr.employee_id)),0) AS AVERAGE_OT";
+        $sqlSelect = "s.s_name AS NAME, SUM(otr.attendance_hours) / NULLIF(COUNT(DISTINCT(otr.employee_id)),0) AS AVERAGE_OT";
         $sqlConditions_actual .= " AND s.department_id = '{$filterData['departmentId']}'";
-        $sqlGroupBy = "s.name";
+        $sqlGroupBy = "s.s_name";
     } elseif (!empty($filterData['divisionId'])) {
-        $sqlSelect = "d.name AS NAME, SUM(otr.attendance_hours) / NULLIF(COUNT(DISTINCT(otr.employee_id)),0) AS AVERAGE_OT";
+        $sqlSelect = "d.s_name AS NAME, SUM(otr.attendance_hours) / NULLIF(COUNT(DISTINCT(otr.employee_id)),0) AS AVERAGE_OT";
         $sqlConditions_actual .= " AND d.division_id = '{$filterData['divisionId']}'";
-        $sqlGroupBy = "d.name";
+        $sqlGroupBy = "d.s_name";
     }
 }
 $sql = "SELECT 
