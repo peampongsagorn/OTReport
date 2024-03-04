@@ -72,7 +72,7 @@ while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
 
 
 
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -84,7 +84,7 @@ while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
         .chart-container {
             position: relative;
             margin: auto;
-            height: 60vh;
+            height: 40vh;
             /* ปรับความสูงตามที่ต้องการ */
             width: 20vw;
             /* ปรับความกว้างตามที่ต้องการ */
@@ -159,4 +159,92 @@ while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
 </body>
 
 </html>
+ -->
 
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Top 3 OT Hours</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
+    <style>
+        .chart-container {
+            position: relative;
+            margin: auto;
+            height: 45vh; /* ปรับความสูงตามที่ต้องการ */
+            width: 30vw; /* ปรับความกว้างตามที่ต้องการ */
+            border: 2px solid #3E4080;
+            box-shadow: 2px 4px 5px #3E4080;
+            border-radius: 25px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="col-md-auto" style="padding: 0; margin: 5px;">
+    <div class="chart-container">
+        <canvas id="otPolarAreaChart"></canvas>
+    </div>
+</div>
+
+<script>
+    function formatHours(value) {
+        return value >= 1000 ? (value / 1000).toFixed(1) + 'K Hrs' : value + ' Hrs';
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var ctx = document.getElementById('otPolarAreaChart').getContext('2d');
+        var otPolarAreaChart = new Chart(ctx, {
+            type: 'polarArea',
+            data: {
+                labels: [<?php foreach ($results as $row) echo "'" . htmlspecialchars($row['Request_msg'], ENT_QUOTES) . "',"; ?>],
+                datasets: [{
+                    data: [<?php foreach ($results as $row) echo htmlspecialchars($row['SUM_HOURS'], ENT_QUOTES) . ","; ?>],
+                    backgroundColor: [
+                        'rgb(255, 99, 132)',
+                        'rgb(54, 162, 235)',
+                        'rgb(255, 205, 86)'
+                    ],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scale: {
+                    ticks: {
+                        display: false,
+                        beginAtZero: true
+                    }
+                },
+                title: {
+                    display: true,
+                    text: 'Top 3 TYPE OT',
+                    font: {
+                        weight: 'bold',
+                        size: 20
+                    },
+                },
+                plugins: {
+                    datalabels: {
+                        color: 'black',
+                        textAlign: 'center',
+                        anchor: 'end', // ตำแหน่งข้อความที่ปลาย (นอกกราฟ)
+                        align: 'end', // ตำแหน่งข้อความชี้ไปนอกกราฟ
+                        font: {
+                            weight: 'bold',
+                            size: 12
+                        },
+                        formatter: function(value, context) {
+                            return formatHours(value);
+                        }
+                        
+                    }
+                },
+            }
+        });
+    });
+</script>
+</body>
+</html>
