@@ -132,57 +132,87 @@ $chartDataJson = json_encode($chartData);
 
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8">
     <title>Average OT Per Person Actual</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>    
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
     <style>
         .chart-container-bar {
             position: relative;
             margin: auto;
-            height: 60vh; /* คุณสามารถปรับขนาดตามที่ต้องการ */
-            width: 80vw; /* คุณสามารถปรับขนาดตามที่ต้องการ */
+            height: 45vh;
+            width: 63vw;
+            border: 2px solid #3E4080;
+            box-shadow: 2px 4px 5px #3E4080;
+            border-radius: 25px;
         }
     </style>
 </head>
+
 <body>
 
-<div class="chart-container-bar">
-    <canvas id="barChart"></canvas>
-</div>
+    <div class="col-md-auto" style="padding: 0; margin: 5px;">
+        <div class="chart-container-bar">
+            <canvas id="barChart"></canvas>
+        </div>
+    </div>
 
-<script>
-    var chartData = <?php echo $chartDataJson; ?>; // ตัวอย่างข้อมูลจากเซิร์ฟเวอร์
-
-    var ctx = document.getElementById('barChart').getContext('2d');
-    var barChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: chartData.map(function(item) { return item.name; }), // ปรับให้เหมาะสมกับชื่อแต่ละแผนกหรือส่วนงาน
-            datasets: [{
-                label: 'Average OT Per Person',
-                data: chartData.map(function(item) { return item.average_ot; }), // ปรับให้เหมาะสมกับข้อมูล
-                backgroundColor: 'rgba(0, 123, 255, 0.5)',
-                borderColor: 'rgba(0, 123, 255, 1)',
-                borderWidth: 1
-            }]
-        },
-        options: {
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero: true
-                    }
+    <script>
+        var chartData = <?php echo $chartDataJson; ?>; // ตัวอย่างข้อมูลจากเซิร์ฟเวอร์
+        var colors = [
+            'rgba(255, 99, 132, 0.4)', // สีแดง
+            'rgba(54, 162, 235, 0.4)', // สีฟ้า
+            'rgba(255, 206, 86, 0.4)', // สีเหลือง
+            'rgba(75, 192, 192, 0.4)', // สีเขียว
+            'rgba(153, 102, 255, 0.4)', // สีม่วง
+            'rgba(255, 159, 64, 0.4)' // สีส้ม
+        ];
+        var ctx = document.getElementById('barChart').getContext('2d');
+        var barChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: chartData.map(function(item) {
+                    return item.name;
+                }), // ปรับให้เหมาะสมกับชื่อแต่ละแผนกหรือส่วนงาน
+                datasets: [{
+                    label: 'Average OT Per Person',
+                    data: chartData.map(function(item) {
+                        return item.average_ot;
+                    }), // ปรับให้เหมาะสมกับข้อมูล
+                    backgroundColor: colors, // ใช้งานอาร์เรย์ของสีที่สร้างขึ้น
+                    borderColor: colors.map(color => color.replace('0.4', '1')), // สร้างอาร์เรย์ของสีเส้นขอบโดยการเปลี่ยนค่าความโปร่งใส
+                    borderWidth: 1
                 }]
             },
-            responsive: true,
-            maintainAspectRatio: false
-        }
-    });
-</script>
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true,
+                            callback: function(value) {
+                                return value.toFixed(2); // จำกัดทศนิยมสองตำแหน่งในแกน Y
+                            }
+                        }
+                    }]
+                },
+                plugins: {
+                    datalabels: {
+                        align: 'end',
+                        anchor: 'end',
+                        formatter: function(value, context) {
+                            return value.toFixed(2); // จำกัดทศนิยมสองตำแหน่งใน label
+                        }
+                    }
+                },
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+    </script>
 
 </body>
-</html>
 
+</html>
