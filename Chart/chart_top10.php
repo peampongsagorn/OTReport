@@ -158,7 +158,7 @@ unset($employee); // ลบการอ้างอิงเมื่อเส�
         th,
         td {
             padding: 3px;
-            text-align: center;
+            text-align: left;
         }
 
         .chart-container-table {
@@ -166,19 +166,16 @@ unset($employee); // ลบการอ้างอิงเมื่อเส�
             border: 2px solid #3E4080;
             box-shadow: 2px 4px 5px #3E4080;
             border-radius: 25px;
-        }
+        }   
 
-        .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+        /* .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
             background-color: #4CAF50;
-            /* สีพื้นหลังใหม่ที่คุณต้องการ */
             color: white !important;
         }
 
-        /* สไตล์สำหรับเมื่อปุ่มลูกศร active หรือ focused */
         .dataTables_wrapper .dataTables_paginate .paginate_button:active,
         .dataTables_wrapper .dataTables_paginate .paginate_button:focus {
             background-color: #4CAF50 !important;
-            /* สีเดียวกับที่ใช้ใน hover */
             color: white !important;
         }
 
@@ -189,18 +186,15 @@ unset($employee); // ลบการอ้างอิงเมื่อเส�
             margin-bottom: 10px;
         }
 
-        /* ให้ข้อความ "ค้นหา:" และช่องค้นหาอยู่ในแถวเดียวกัน */
         .dataTables_filter label {
             display: flex;
             align-items: center;
             margin-bottom: 0;
-            /* ลบ margin ด้านล่างออกเพื่อให้ align กับ dropdown */
         }
 
         .dataTables_filter input {
             margin-left: 0.5em;
-            /* กำหนดระยะห่างระหว่างข้อความ "ค้นหา:" กับช่องค้นหา */
-        }
+        } */
     </style>
 
 </head>
@@ -219,10 +213,10 @@ unset($employee); // ลบการอ้างอิงเมื่อเส�
                     <th>Full Name</th>
                     <th>Department</th>
                     <th>Total Hours</th>
-                    <th>จำนวนครั้งที่ทำ OT เกิน 36 ชม/สัปดาห์</th>
+                    <th>OT เกิน 36 ชม/สัปดาห์ (ครั้ง)</th>
                     <th>OT FIX</th>
                     <th>OT NONFIX</th>
-                    <th>AVG OT/Day</th> <!-- เพิ่มคอลัมน์ใหม่ -->
+                    <th>AVG OT/Day</th>
                 </tr>
             </thead>
             <tbody>
@@ -234,8 +228,10 @@ unset($employee); // ลบการอ้างอิงเมื่อเส�
                     echo '<td>' . htmlspecialchars($employee['DEPARTMENT']) . '</td>';
                     echo '<td>' . number_format($employee['TOTAL_HOURS'], 0) . '</td>';
                     echo '<td>' . htmlspecialchars($employee['OT_EXCEEDS']) . '</td>';
-                    echo '<td>' . (is_numeric($employee['FIX']) ? number_format($employee['FIX'], 0) : $employee['FIX']) . '</td>';
-                    echo '<td>' . (is_numeric($employee['NONFIX']) ? number_format($employee['NONFIX'], 0) : $employee['NONFIX']) . '</td>';
+                    // echo '<td>' . (is_numeric($employee['FIX']) ? number_format($employee['FIX'], 0) : $employee['FIX']) . '</td>';
+                    // echo '<td>' . (is_numeric($employee['NONFIX']) ? number_format($employee['NONFIX'], 0) : $employee['NONFIX']) . '</td>';
+                    echo '<td>' . number_format($employee['FIX'], 0) . '</td>';
+                    echo '<td>' . number_format($employee['NONFIX'], 0) . '</td>';
                     echo '<td>' . number_format($avgOtPerDay, 2) . '</td>';
                     echo '</tr>';
                 }
@@ -244,58 +240,6 @@ unset($employee); // ลบการอ้างอิงเมื่อเส�
         </table>
     </div>
 </body>
-
-
-<!-- <script>
-    $(document).ready(function() {
-        // Initialize DataTable with custom options
-        var dataTable = $('.data-table2').DataTable({
-            "lengthMenu": [10, 15, 20, 30, 50], // เลือกจำนวนแถวที่แสดง
-            "pageLength": 10, // จำนวนแถวที่แสดงต่อหน้าเริ่มต้น
-            "dom": '<"d-flex justify-content-between"lf>rt<"d-flex justify-content-between"ip><"clear">', // ตำแหน่งของ elements
-            "language": {
-
-                // "zeroRecords": "ไม่พบข้อมูล",
-                // "infoEmpty": "ไม่มีข้อมูลที่แสดง",
-
-                // "search": "ค้นหา:",
-                // "paginate": {
-                //     "first": "หน้าแรก",
-                //     "last": "หน้าสุดท้าย",
-                //     "next": "ถัดไป",
-                //     "previous": "ก่อนหน้า"
-                // }
-                "info": "หน้า _START_ - _END_ จากทั้งหมด _TOTAL_ รายการ",
-                "lengthMenu": "แสดง _MENU_ รายการ",
-                "search": "<a style='color: #7a7a7a'><i class='fa-solid fa-magnifying-glass' ></i> ค้นหา : </a>",
-                "paginate": {
-                    "next": '▶',
-                    "previous": '◀'
-                },
-                "infoEmpty": "ไม่มีรายการที่แสดง",
-                "infoFiltered": "(กรองจากทั้งหมด _MAX_ รายการ)",
-                searchPlaceholder: "ค้นหา",
-            }
-        });
-
-        // Add Bootstrap styling to length dropdown and search input
-        $('select[name="dataTables_length"]').addClass('form-control form-control-sm');
-        $('input[type="search"]').addClass('form-control form-control-sm');
-
-        // Trigger DataTables redraw on select change
-        $('select[name="dataTables_length"]').change(function() {
-            dataTable.draw();
-        });
-
-        // Trigger DataTables search on input change
-        $('input[type="search"]').on('input', function() {
-            dataTable.search(this.value).draw();
-        });
-        $('.dataTables_length').appendTo('.dataTables_top');
-        $('.dataTables_filter').appendTo('.dataTables_top');
-
-    });
-</script> -->
 
 <script>
     $(document).ready(function() {
@@ -324,8 +268,6 @@ unset($employee); // ลบการอ้างอิงเมื่อเส�
             searchPlaceholder: "ค้นหา",
         }
     });
-
-    // ... the rest of your DataTables code ...
 });
 
 
