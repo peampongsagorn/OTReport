@@ -15,10 +15,10 @@ session_start();
                         <div class="container-fluid" style="background-color: white; padding: 15px; margin-bottom: 20px; border: 2px solid #3E4080; border-radius: 15px; box-shadow: 5px 5px 5px #3E4080;">
                             <div class="row" style="justify-content: center;">
                                 <div class="col-md-3 mb-2 d-flex">
-                                    <?php include('./Chart/chart_cal_percent.php') ?>
+                                        <?php include('./Chart/chart_cal_percent.php') ?>
                                     <div class="card custom-card text-white" style="background-color: #41446B; flex-grow: 1; border-radius: 15px; box-shadow: 2px 4px 5px #3E4080">
                                         <div class="card-header text-center" style="background-color: #313456; border-top-right-radius: 15px; border-top-left-radius: 15px;">
-                                            Plan % Normal Time
+                                            Plan % Normal Time <br> (% Plan เวลาทำ OT ต่อวันต่อคน)
                                         </div>
                                         <div class="card-body d-flex align-items-center justify-content-center" style="height: 70px;">
                                             <h5 class="card-title">
@@ -32,7 +32,7 @@ session_start();
                                 <div class="col-md-3 mb-2 d-flex">
                                     <div class="card custom-card text-white" style="background-color: #41446B; flex-grow: 1; border-radius: 15px; box-shadow: 2px 4px 5px #3E4080">
                                         <div class="card-header text-center" style="background-color: #313456; border-top-right-radius: 15px; border-top-left-radius: 15px;">
-                                            Actual % Normal Time
+                                            Actual % Normal Time </br> (% Actual เวลาทำ OT ต่อวันต่อคน)
                                         </div>
                                         <div class="card-body d-flex align-items-center justify-content-center" style="height: 70px;">
                                             <h5 class="card-title">
@@ -46,8 +46,7 @@ session_start();
                                 <div class="col-md-3 mb-2 d-flex">
                                     <div class="card custom-card text-white" style="background-color: #41446B ; flex-grow: 1; border-radius: 15px; box-shadow: 2px 4px 5px <?php echo $colorClass ?>">
                                         <div class="card-header text-center" style="background-color: #313456; border-top-right-radius: 15px; border-top-left-radius: 15px;">
-                                            Percentage
-                                            Difference
+                                            Percentage Difference </br> (Varience)
                                         </div>
                                         <div class="card-body d-flex align-items-center justify-content-center" style="height: 70px;">
                                             <h5 class="card-title">
