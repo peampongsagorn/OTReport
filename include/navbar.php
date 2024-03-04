@@ -18,9 +18,9 @@
     <div class="container-fluid">
         <div class="row" style=" background: #E7F6F2">
             <div class="col header-form">
-                <div class="item filter"><?php include('./filter.php') ?></div>
-                <div class="item form-upload"><?php include('./formupload.php') ?></div>
-                <div class="item search-data"><?php include('./Chart/search_data.php') ?><br></div>
+                <?php include('./formupload.php') ?>
+                <?php include('./filter.php') ?>
+                <?php include('./Chart/search_data.php') ?><br>
             </div>
         </div>
     </div>
