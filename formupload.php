@@ -1,5 +1,5 @@
 
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#uploadModal" style="margin-right: 10px;">
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#uploadModal" style="margin-right: 10px; margin-left:10px">
     Upload Excel Files
 </button>
 
