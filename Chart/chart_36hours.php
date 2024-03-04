@@ -1,6 +1,6 @@
 <?php
-session_start();
-require_once('../connection.php');
+//session_start();
+require_once('./connection.php');
 
 // เริ่มต้น ตั้งค่าสำหรับเงื่อนไขค้นหา
 $currentYear = date('Y');
@@ -78,11 +78,8 @@ if ($filterData) {
                     {$sqlConditions}
                 GROUP BY 
                     cc.cost_center_code;";
-
-
-
     } elseif (!empty($filterData['departmentId'])) {
-        $sqlConditions= "s.department_id = '{$filterData['departmentId']}'";
+        $sqlConditions = "s.department_id = '{$filterData['departmentId']}'";
         $sql = "SELECT 
                     s.name,
                     COUNT(DISTINCT e.employee_id) AS EmployeesExceeding36Hours
@@ -111,7 +108,6 @@ if ($filterData) {
                     {$sqlConditions}
                 GROUP BY 
                     s.name;";
-
     } elseif (!empty($filterData['divisionId'])) {
         $sqlConditions = "d.division_id = '{$filterData['divisionId']}'";
         $sql = "SELECT 
@@ -183,7 +179,7 @@ if ($filterData) {
 
 
 
-            
+
 // ดำเนินการ query และเก็บผลลัพธ์
 $stmt = sqlsrv_query($conn, $sql);
 if ($stmt === false) {
@@ -191,12 +187,12 @@ if ($stmt === false) {
 }
 
 $employeeOTData = [];
-while($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
+while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
     $employeeOTData[] = $row; // เก็บข้อมูลลงในอาร์เรย์
 }
 
 // เรียงลำดับข้อมูลตามจำนวนครั้งที่ทำ OT เกิน 36 ชั่วโมง
-usort($employeeOTData, function($a, $b) {
+usort($employeeOTData, function ($a, $b) {
     return $b['EmployeesExceeding36Hours'] <=> $a['EmployeesExceeding36Hours'];
 });
 
@@ -204,7 +200,7 @@ usort($employeeOTData, function($a, $b) {
 
 
 
-<html>
+<!-- <html>
 <head>
     <style>
         .table {
@@ -241,7 +237,7 @@ usort($employeeOTData, function($a, $b) {
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($employeeOTData as $employee): ?>
+            <?php foreach ($employeeOTData as $employee) : ?>
                 <tr>
                     <td><?= htmlspecialchars($employee['name']) ?></td>
                     <td><?= $employee['EmployeesExceeding36Hours'] ?></td>
@@ -250,4 +246,68 @@ usort($employeeOTData, function($a, $b) {
         </tbody>
     </table>
 </body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
+    <style>
+        .chart-container-thirtysix {
+            position: relative;
+            margin: auto;
+            height: 45vh; /* ปรับความสูงตามที่ต้องการ */
+            width: 30vw; /* ปรับความกว้างตามที่ต้องการ */
+            border: 2px solid #3E4080;
+            box-shadow: 2px 4px 5px #3E4080;
+            border-radius: 25px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="col-md-auto" style="padding: 0; margin: 5px;">
+        <div class="chart-container-thirtysix">
+            <canvas id="otDonutChart"></canvas>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var ctx = document.getElementById('otDonutChart').getContext('2d');
+            var otDonutChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: <?= json_encode(array_column($employeeOTData, 'name')) ?>,
+                    datasets: [{
+                        label: 'Employees Exceeding 36 Hours',
+                        data: <?= json_encode(array_column($employeeOTData, 'EmployeesExceeding36Hours')) ?>,
+                        backgroundColor: [
+                            // กำหนดสีสำหรับแต่ละส่วนของกราฟ
+                            'rgb(255, 99, 132)',
+                            'rgb(54, 162, 235)',
+                            'rgb(255, 205, 86)',
+                            // เพิ่มสีตามจำนวนข้อมูล
+                        ],
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    title: {
+                        display: true,
+                        text: 'OT > 36 Hours per Week'
+                    }
+                }
+            });
+        });
+    </script>
+
+</body>
+
 </html>
