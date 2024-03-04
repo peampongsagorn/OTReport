@@ -16,7 +16,6 @@ if ($filterData) {
         $sqlConditions_actual = "date BETWEEN '{$filterData['startMonthDate']}' AND '{$filterData['endMonthDateCurrent']}'";
     }
 
-    // ปรับปรุงเงื่อนไขค้นหาตาม section, department และ division ถ้ามี
     if (!empty($filterData['sectionId'])) {
         $sqlConditions_actual .= " AND cc.section_id = '{$filterData['sectionId']}'";
     } elseif (!empty($filterData['departmentId'])) {
@@ -26,7 +25,6 @@ if ($filterData) {
     }
 }
 
-// คำสั่ง SQL สำหรับการดึงข้อมูล OT
 $sql = "SELECT 
             e.employee_id,
             CONCAT(e.FIRSTNAME_T, ' ', e.LASTNAME_T) AS EMPLOYEE_NAME,
@@ -168,33 +166,7 @@ unset($employee); // ลบการอ้างอิงเมื่อเส�
             border-radius: 25px;
         }   
 
-        /* .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
-            background-color: #4CAF50;
-            color: white !important;
-        }
 
-        .dataTables_wrapper .dataTables_paginate .paginate_button:active,
-        .dataTables_wrapper .dataTables_paginate .paginate_button:focus {
-            background-color: #4CAF50 !important;
-            color: white !important;
-        }
-
-        .dataTables_top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .dataTables_filter label {
-            display: flex;
-            align-items: center;
-            margin-bottom: 0;
-        }
-
-        .dataTables_filter input {
-            margin-left: 0.5em;
-        } */
     </style>
 
 </head>

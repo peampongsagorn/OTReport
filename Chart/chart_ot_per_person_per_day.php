@@ -15,12 +15,7 @@ $isDepartmentSpecific = !empty($filterData['departmentId']);
 $sqlSelect = "dv.s_name AS NAME, SUM(otr.attendance_hours) / NULLIF(COUNT(DISTINCT(otr.employee_id)),0) AS AVERAGE_OT";
 $sqlGroupBy = "dv.s_name";
 
-// $sqlSelect1 = "dv.name AS NAME,SUM(otp.working_day) / COUNT(DISTINCT(otp.costcenter_id)) AS Working_day";
-// $sqlGroupBy1 = "dv.name";
 
-
-//query เฉลี่ยต่อคนแต่ยังไม่หารวัน
-if ($filterData) {
 
     if (!empty($filterData['startMonthDate']) && !empty($filterData['endMonthDateCurrent'])) {
         $sqlConditions_actual = "date BETWEEN '{$filterData['startMonthDate']}' AND '{$filterData['endMonthDateCurrent']}'";
@@ -102,18 +97,16 @@ if ($stmt === false) {
 $row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
 
 $totalOTPercentForActual = $row['WorkingDay'] ?? 0;
-//echo $totalOTPercentForActual
 
-// ตรวจสอบก่อนว่า $totalOTPercentForActual มีค่ามากกว่า 0 เพื่อหลีกเลี่ยงการหารด้วยศูนย์
 if ($totalOTPercentForActual > 0) {
     foreach ($chartData as $key => $value) {
-        // หารค่าเฉลี่ย OT ด้วยจำนวนวันทำงานที่ได้จาก ot_plan และปรับปรุงค่าใน array
+
         $chartData[$key]['average_ot'] = $value['average_ot'] / $totalOTPercentForActual;
     }
 } else {
-    // ถ้าไม่มีวันทำงาน, อาจจะต้องการจัดการกับสถานการณ์นี้ เช่น การตั้งค่าเป็น 0 หรือค่าเริ่มต้นอื่น
+
     foreach ($chartData as $key => $value) {
-        $chartData[$key]['average_ot'] = 0; // หรือค่าที่เหมาะสมอื่นๆ
+        $chartData[$key]['average_ot'] = 0; 
     }
 }
 
