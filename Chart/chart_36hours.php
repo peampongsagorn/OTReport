@@ -188,65 +188,15 @@ if ($stmt === false) {
 
 $employeeOTData = [];
 while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
-    $employeeOTData[] = $row; // เก็บข้อมูลลงในอาร์เรย์
+    $employeeOTData[] = $row; 
 }
 
-// เรียงลำดับข้อมูลตามจำนวนครั้งที่ทำ OT เกิน 36 ชั่วโมง
+
 usort($employeeOTData, function ($a, $b) {
     return $b['EmployeesExceeding36Hours'] <=> $a['EmployeesExceeding36Hours'];
 });
 
 ?>
-
-
-
-<!-- <html>
-<head>
-    <style>
-        .table {
-            width: 90%;
-            margin: auto;
-            border-collapse: collapse;
-            border: 2px solid #3E4080;
-            box-shadow: 2px 4px 5px #3E4080;
-        }
-
-        thead th {
-            font-size: 14px;
-            background-color: #1C1D3A;
-            color: white;
-            padding: 3px;
-            text-align: center;
-        }
-
-        tbody td {
-            font-size: 12px;
-            background-color: #D4E8E5;
-            color: #757575;
-            padding: 3px;
-            text-align: center;
-        }
-    </style>
-</head>
-<body>
-<table class="table">
-        <thead>
-            <tr>
-                <th>Division/Department/Section Name</th>
-                <th>Employees Exceeding 36 Hours</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($employeeOTData as $employee) : ?>
-                <tr>
-                    <td><?= htmlspecialchars($employee['name']) ?></td>
-                    <td><?= $employee['EmployeesExceeding36Hours'] ?></td>
-                </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
-</body>
-</html> -->
 
 <!DOCTYPE html>
 <html lang="en">
