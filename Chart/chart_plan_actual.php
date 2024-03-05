@@ -4,6 +4,7 @@ require_once('./connection.php');
 
 $currentYear = date('Y');
 $filterData = $_SESSION['filter'] ?? null;
+$filterType = $filterData['type'] ?? 'INVALID';
 $currentYear = date('Y'); // ปีปัจจุบัน
 $startYear = $currentYear . '-01-01'; // วันที่ 1 มกราคมของปีปัจจุบัน
 $currentDate = date('Y-m-d'); // วันที่ปัจจุบัน
@@ -32,8 +33,8 @@ $query = "SELECT
         (SELECT 
             dv.s_name,
             CASE
-                WHEN '{$filterData['type']}' = 'OT FIX' THEN SUM(ot_plan.sum_fix)
-                WHEN '{$filterData['type']}' = 'OT NON FIX' THEN SUM(ot_plan.nonfix)
+                WHEN '{$filterType}' = 'OT FIX' THEN SUM(ot_plan.sum_fix)
+                WHEN '{$filterType}' = 'OT NON FIX' THEN SUM(ot_plan.nonfix)
                 ELSE SUM(ot_plan.total_hours)
             END AS total_hours
 
@@ -100,8 +101,8 @@ if ($filterData) {
                 (SELECT 
                     c.cost_center_code,
                     CASE
-                        WHEN '{$filterData['type']}' = 'OT FIX' THEN SUM(ot_plan.sum_fix)
-                        WHEN '{$filterData['type']}' = 'OT NON FIX' THEN SUM(ot_plan.nonfix)
+                        WHEN '{$filterType}' = 'OT FIX' THEN SUM(ot_plan.sum_fix)
+                        WHEN '{$filterType}' = 'OT NON FIX' THEN SUM(ot_plan.nonfix)
                         ELSE SUM(ot_plan.total_hours)
                     END AS total_hours
                 FROM 
@@ -139,8 +140,8 @@ if ($filterData) {
                 (SELECT 
                     s.s_name,
                     CASE
-                        WHEN '{$filterData['type']}' = 'OT FIX' THEN SUM(ot_plan.sum_fix)
-                        WHEN '{$filterData['type']}' = 'OT NON FIX' THEN SUM(ot_plan.nonfix)
+                        WHEN '{$filterType}' = 'OT FIX' THEN SUM(ot_plan.sum_fix)
+                        WHEN '{$filterType}' = 'OT NON FIX' THEN SUM(ot_plan.nonfix)
                         ELSE SUM(ot_plan.total_hours)
                     END AS total_hours
                 FROM 
@@ -178,8 +179,8 @@ if ($filterData) {
                 (SELECT 
                     d.s_name,
                     CASE
-                        WHEN '{$filterData['type']}' = 'OT FIX' THEN SUM(ot_plan.sum_fix)
-                        WHEN '{$filterData['type']}' = 'OT NON FIX' THEN SUM(ot_plan.nonfix)
+                        WHEN '{$filterType}' = 'OT FIX' THEN SUM(ot_plan.sum_fix)
+                        WHEN '{$filterType}' = 'OT NON FIX' THEN SUM(ot_plan.nonfix)
                         ELSE SUM(ot_plan.total_hours)
                     END AS total_hours
                 FROM 
@@ -215,8 +216,8 @@ if ($filterData) {
         (SELECT 
             dv.s_name,
             CASE
-                WHEN '{$filterData['type']}' = 'OT FIX' THEN SUM(ot_plan.sum_fix)
-                WHEN '{$filterData['type']}' = 'OT NON FIX' THEN SUM(ot_plan.nonfix)
+                WHEN '{$filterType}' = 'OT FIX' THEN SUM(ot_plan.sum_fix)
+                WHEN '{$filterType}' = 'OT NON FIX' THEN SUM(ot_plan.nonfix)
                 ELSE SUM(ot_plan.total_hours)
             END AS total_hours
         FROM 
@@ -234,7 +235,6 @@ if ($filterData) {
 
 $result = sqlsrv_query($conn, $query);
 
-// Check if there are any results
 $chartData = array();
 if ($result) {
     while ($row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
@@ -299,6 +299,15 @@ if ($result) {
                     data: attendanceData,
                     backgroundColor: 'rgba(0, 123, 255, 0.5)',
                     yAxisID: 'y-axis-1',
+                    datalabels: {
+                        display: true,
+                        color: 'rgba(0, 123, 255)',
+                        anchor: 'end', 
+                        align: 'top',
+                        formatter: function(value) {
+                            return value.toFixed(2);
+                        }
+                    }
                 }, {
                     label: 'Plan Hours',
                     data: totalHoursData,
@@ -307,6 +316,9 @@ if ($result) {
                     fill: false,
                     yAxisID: 'y-axis-1',
                     steppedLine: 'middle',
+                    datalabels: {
+                        display: false,
+                    }
                 }]
             },
             options: {
@@ -355,11 +367,7 @@ if ($result) {
                     mode: 'nearest',
                     intersect: true
                 },
-                plugins: {
-                    datalabels: {
-                        display: false
-                    }
-                }
+                
             }
         });
     </script>
