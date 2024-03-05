@@ -12,7 +12,7 @@ session_start();
             <div class="card-box lower-box pd-20 mb-30" style="background-color: #eeeeee;  min-height: 1100px; border-radius: 15px; box-shadow: 10px 10px 8px #3E4080">
                 <div class="row justify-content-center">
                     <div class="col-md-12">
-                        <div class="container-fluid" style="background-color: white; padding: 15px; margin-bottom: 20px; border: 2px solid #3E4080; border-radius: 15px; box-shadow: 5px 5px 5px #3E4080;">
+                        <div class="container-fluid" style="background-color: white; padding: 15px; margin-bottom: 20px; border: 2px solid #3E4080; border-radius: 25px; box-shadow: 5px 5px 5px #3E4080;">
                             <div class="row" style="justify-content: center;">
                                 <div class="col-md-3 mb-2 d-flex">
                                         <?php include('./Chart/chart_cal_percent.php') ?>
