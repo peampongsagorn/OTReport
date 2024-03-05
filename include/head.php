@@ -23,6 +23,22 @@
             padding: 10px 0;
         }
 
+        .footer-container {
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 5px 0;
+            font-size: 17px;
+        }
+
+        .footer-container p {
+            white-space: normal;
+            margin: 3px;
+            /* แก้ไขตามที่ต้องการเพื่อเพิ่มระยะห่างระหว่างบรรทัด */
+        }
+
         .header-form .filter {
             order: 2;
             justify-content: end;
@@ -95,6 +111,7 @@
             justify-content: space-between;
             align-items: start;
             display: flex;
+            margin-bottom: 10px;
 
         }
 
