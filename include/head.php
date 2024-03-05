@@ -4,6 +4,7 @@
 <head>
     <!-- Basic Page Info -->
     <meta charset="utf-8">
+    <link rel="icon" type="image/svg+xml" href="./image/iconOT3.png" />
     <title>OT Plan Actual Report</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
