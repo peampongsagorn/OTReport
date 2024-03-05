@@ -252,7 +252,19 @@ usort($employeeOTData, function ($a, $b) {
                     title: {
                         display: true,
                         text: 'OT > 36 Hours per Week'
+                    },
+                    plugins: {
+                    datalabels: {
+                        color: 'white',
+                        textAlign: 'center',
+                        font: {
+                            weight: 'bold',
+                            size: 15
+                        }
+
+                        
                     }
+                }
                 }
             });
         });
