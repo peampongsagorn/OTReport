@@ -80,41 +80,41 @@ if ($filterData) {
         $sqlConditions_actual .= " AND c.section_id = '{$filterData['sectionId']}'";
         $sqlConditions_plan .= " AND c.section_id = '{$filterData['sectionId']}'";
         $query = "SELECT 
-                COALESCE(attendance.name, total_hours.name) AS name,
-                COALESCE(SUM(attendance.attendance_hours), 0) AS attendance_hours,
-                COALESCE(SUM(total_hours.total_hours), 0) AS total_hours
+                    COALESCE(attendance.cost_center_code, total_hours.cost_center_code) AS cost_center_code,
+                    COALESCE(SUM(attendance.attendance_hours), 0) AS attendance_hours,
+                    COALESCE(SUM(total_hours.total_hours), 0) AS total_hours
                 FROM 
-                (SELECT 
-                    c.cost_center_code,
-                    SUM(ot_record.attendance_hours) as attendance_hours
-                FROM 
-                    ot_record
-                INNER JOIN employee e ON ot_record.employee_id = e.employee_id
-                INNER JOIN costcenter c ON e.CostcenterID = c.cost_center_id
-                INNER JOIN [section] s ON c.section_id = s.section_id
-                INNER JOIN department d ON s.department_id = d.department_id
-                INNER JOIN division dv ON d.division_id = dv.division_id
-                WHERE {$sqlConditions_actual}
-                GROUP BY c.cost_center_code
-                ) attendance
+                    (SELECT 
+                        c.cost_center_code,
+                        SUM(ot_record.attendance_hours) as attendance_hours
+                    FROM 
+                        ot_record
+                    INNER JOIN employee e ON ot_record.employee_id = e.employee_id
+                    INNER JOIN costcenter c ON e.CostcenterID = c.cost_center_id
+                    INNER JOIN [section] s ON c.section_id = s.section_id
+                    INNER JOIN department d ON s.department_id = d.department_id
+                    INNER JOIN division dv ON d.division_id = dv.division_id
+                    WHERE {$sqlConditions_actual}
+                    GROUP BY c.cost_center_code
+                    ) attendance
                 FULL JOIN 
-                (SELECT 
-                    c.cost_center_code,
-                    CASE
-                        WHEN '{$filterType}' = 'OT FIX' THEN SUM(ot_plan.sum_fix)
-                        WHEN '{$filterType}' = 'OT NON FIX' THEN SUM(ot_plan.nonfix)
-                        ELSE SUM(ot_plan.total_hours)
-                    END AS total_hours
-                FROM 
-                    ot_plan
-                INNER JOIN costcenter c ON ot_plan.costcenter_id = c.cost_center_id
-                INNER JOIN [section] s ON c.section_id = s.section_id
-                INNER JOIN department d ON s.department_id = d.department_id
-                INNER JOIN division dv ON d.division_id = dv.division_id
-                WHERE {$sqlConditions_plan}
-                GROUP BY c.cost_center_code
-                ) total_hours ON attendance.name = total_hours.name
-                GROUP BY COALESCE(attendance.name, total_hours.name)";
+                    (SELECT 
+                        c.cost_center_code,
+                        CASE
+                            WHEN '{$filterType}' = 'OT FIX' THEN SUM(ot_plan.sum_fix)
+                            WHEN '{$filterType}' = 'OT NON FIX' THEN SUM(ot_plan.nonfix)
+                            ELSE SUM(ot_plan.total_hours)
+                        END AS total_hours
+                    FROM 
+                        ot_plan
+                    INNER JOIN costcenter c ON ot_plan.costcenter_id = c.cost_center_id
+                    INNER JOIN [section] s ON c.section_id = s.section_id
+                    INNER JOIN department d ON s.department_id = d.department_id
+                    INNER JOIN division dv ON d.division_id = dv.division_id
+                    WHERE {$sqlConditions_plan}
+                    GROUP BY c.cost_center_code
+                    ) total_hours ON attendance.cost_center_code = total_hours.cost_center_code
+                GROUP BY COALESCE(attendance.cost_center_code, total_hours.cost_center_code)";
     } elseif (!empty($filterData['departmentId'])) {
         $sqlConditions_actual .= " AND s.department_id = '{$filterData['departmentId']}'";
         $sqlConditions_plan .= " AND s.department_id = '{$filterData['departmentId']}'";
