@@ -16,6 +16,7 @@ $sqlSelect = "dv.s_name AS NAME, SUM(otr.attendance_hours) / NULLIF(COUNT(DISTIN
 $sqlGroupBy = "dv.s_name";
 
 
+if ($filterData) {
 
     if (!empty($filterData['startMonthDate']) && !empty($filterData['endMonthDateCurrent'])) {
         $sqlConditions_actual = "date BETWEEN '{$filterData['startMonthDate']}' AND '{$filterData['endMonthDateCurrent']}'";
@@ -69,7 +70,7 @@ while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
     ];
 }
 
-//  
+
 //query วันทำงาน
 
 if ($filterData) {
@@ -98,15 +99,14 @@ $row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
 
 $totalOTPercentForActual = $row['WorkingDay'] ?? 0;
 
+// ตรวจสอบก่อนว่า $totalOTPercentForActual มีค่ามากกว่า 0 เพื่อหลีกเลี่ยงการหารด้วยศูนย์
 if ($totalOTPercentForActual > 0) {
     foreach ($chartData as $key => $value) {
-
         $chartData[$key]['average_ot'] = $value['average_ot'] / $totalOTPercentForActual;
     }
 } else {
-
     foreach ($chartData as $key => $value) {
-        $chartData[$key]['average_ot'] = 0; 
+        $chartData[$key]['average_ot'] = 0;
     }
 }
 
@@ -154,14 +154,14 @@ $chartDataJson = json_encode($chartData);
     </div>
 
     <script>
-        var chartData = <?php echo $chartDataJson; ?>; // ตัวอย่างข้อมูลจากเซิร์ฟเวอร์
+        var chartData = <?php echo $chartDataJson; ?>;
         var colors = [
-            'rgba(255, 99, 132, 0.4)', // สีแดง
-            'rgba(54, 162, 235, 0.4)', // สีฟ้า
-            'rgba(255, 206, 86, 0.4)', // สีเหลือง
-            'rgba(75, 192, 192, 0.4)', // สีเขียว
-            'rgba(153, 102, 255, 0.4)', // สีม่วง
-            'rgba(255, 159, 64, 0.4)' // สีส้ม
+            'rgba(255, 99, 132, 0.4)',
+            'rgba(54, 162, 235, 0.4)',
+            'rgba(255, 206, 86, 0.4)',
+            'rgba(75, 192, 192, 0.4)', 
+            'rgba(153, 102, 255, 0.4)', 
+            'rgba(255, 159, 64, 0.4)' 
         ];
         var ctx = document.getElementById('barChart').getContext('2d');
         var barChart = new Chart(ctx, {
@@ -169,14 +169,14 @@ $chartDataJson = json_encode($chartData);
             data: {
                 labels: chartData.map(function(item) {
                     return item.name;
-                }), // ปรับให้เหมาะสมกับชื่อแต่ละแผนกหรือส่วนงาน
+                }),
                 datasets: [{
                     label: 'Average OT Per Person',
                     data: chartData.map(function(item) {
                         return item.average_ot;
-                    }), // ปรับให้เหมาะสมกับข้อมูล
-                    backgroundColor: colors, // ใช้งานอาร์เรย์ของสีที่สร้างขึ้น
-                    borderColor: colors.map(color => color.replace('0.4', '1')), // สร้างอาร์เรย์ของสีเส้นขอบโดยการเปลี่ยนค่าความโปร่งใส
+                    }), 
+                    backgroundColor: colors, 
+                    borderColor: colors.map(color => color.replace('0.4', '1')),
                     borderWidth: 1
                 }]
             },
@@ -186,7 +186,7 @@ $chartDataJson = json_encode($chartData);
                         ticks: {
                             beginAtZero: true,
                             callback: function(value) {
-                                return value.toFixed(2); // จำกัดทศนิยมสองตำแหน่งในแกน Y
+                                return value.toFixed(2); 
                             }
                         }
                     }]
@@ -196,7 +196,7 @@ $chartDataJson = json_encode($chartData);
                         align: 'end',
                         anchor: 'end',
                         formatter: function(value, context) {
-                            return value.toFixed(2); // จำกัดทศนิยมสองตำแหน่งใน label
+                            return value.toFixed(2); 
                         }
                     }
                 },

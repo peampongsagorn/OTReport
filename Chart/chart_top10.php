@@ -11,7 +11,7 @@ $filterData = $_SESSION['filter'] ?? null;
 $sqlConditions_actual = "date BETWEEN '{$currentYear}-01-01' AND '{$currentDate}'";
 
 if ($filterData) {
-    // ปรับปรุงเงื่อนไขค้นหาตามข้อมูลที่ได้รับจาก filter
+
     if (!empty($filterData['startMonthDate']) && !empty($filterData['endMonthDateCurrent'])) {
         $sqlConditions_actual = "date BETWEEN '{$filterData['startMonthDate']}' AND '{$filterData['endMonthDateCurrent']}'";
     }
@@ -202,8 +202,6 @@ unset($employee); // ลบการอ้างอิงเมื่อเส�
                     echo '<td>' . htmlspecialchars($employee['OT_EXCEEDS']) . '</td>';
                     echo '<td>' . (is_numeric($employee['FIX']) ? number_format($employee['FIX'], 0) : $employee['FIX']) . '</td>';
                     echo '<td>' . (is_numeric($employee['NONFIX']) ? number_format($employee['NONFIX'], 0) : $employee['NONFIX']) . '</td>';
-                    // echo '<td>' . number_format($employee['FIX'], 0) . '</td>';
-                    // echo '<td>' . number_format($employee['NONFIX'], 0) . '</td>';
                     echo '<td>' . number_format($avgOtPerDay, 2) . '</td>';
                     echo '</tr>';
                 }
