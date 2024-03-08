@@ -80,7 +80,7 @@ if ($filterData) {
         $sqlConditions_actual .= " AND c.section_id = '{$filterData['sectionId']}'";
         $sqlConditions_plan .= " AND c.section_id = '{$filterData['sectionId']}'";
         $query = "SELECT 
-                    COALESCE(attendance.cost_center_code, total_hours.cost_center_code) AS cost_center_code,
+                    COALESCE(attendance.cost_center_code, total_hours.cost_center_code) AS name,
                     COALESCE(SUM(attendance.attendance_hours), 0) AS attendance_hours,
                     COALESCE(SUM(total_hours.total_hours), 0) AS total_hours
                 FROM 
