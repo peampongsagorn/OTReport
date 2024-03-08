@@ -129,23 +129,23 @@ function processOTPlanFile($data, $conn) {
         if ($checkStmt && $fetchedRow = sqlsrv_fetch_array($checkStmt, SQLSRV_FETCH_ASSOC)) {
             $costcenter_id = $fetchedRow['cost_center_id']; 
 
-            if (isset($row[4],$row[5], $row[6], $row[7], $row[8], $row[9], $row[10], $row[11], $row[12], $row[13], $row[14], $row[15], $row[16], $row[17])) {
-                $month = $row[5];
-                $year = $row[4];
-                $fix1 = $row[6];
-                $fix2 = $row[7];
-                $fix3 = $row[8];
-                $plan_fix_all = $row[9];
-                $plan_fix_percent = $row[10];
-                $nonfix = $row[11];
-                $plan_nonfix_percent = $row[12];
-                $plan_total_hours = $row[13];
-                $plan_total_hours_percent = $row[14];
-                $people_plan = $row[15];
-                $working_day = $row[16];
-                $dayoff = $row[17];
-                $budget = $row[18];
-                $salary = $row[19];
+            if (isset($row[2],$row[3], $row[4], $row[5], $row[6], $row[7], $row[8], $row[9], $row[10], $row[11], $row[12], $row[13], $row[14], $row[15])) {
+                $month = $row[3];
+                $year = $row[2];
+                $fix1 = $row[4];
+                $fix2 = $row[5];
+                $fix3 = $row[6];
+                $plan_fix_all = $row[7];
+                $plan_fix_percent = $row[8];
+                $nonfix = $row[9];
+                $plan_nonfix_percent = $row[10];
+                $plan_total_hours = $row[11];
+                $plan_total_hours_percent = $row[12];
+                $people_plan = $row[13];
+                $working_day = $row[14];
+                $dayoff = $row[15];
+                $budget = $row[16];
+                $salary = $row[17];
 
 
                 $insertQuery = "INSERT INTO ot_plan (costcenter_id, month, year, fix1, fix2, fix3, nonfix, people, working_day, dayoff, sum_fix, total_hours, plan_fix_percent, plan_nonfix_percent, plan_total_hours_percent, budget, salary) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -156,7 +156,7 @@ function processOTPlanFile($data, $conn) {
                     echo "Error while inserting data: " . print_r(sqlsrv_errors(), true);
                 }
             } else {
-                echo "ข้อมูลในแถวที่ $index ไม่ครบถ้วน กำลังข้ามแถวนี้\n";
+                //echo "ข้อมูลในแถวที่ $index ไม่ครบถ้วน กำลังข้ามแถวนี้\n";
             }
         } else {
             continue;
@@ -176,31 +176,8 @@ function processEmployeeFile($data, $conn) {
         $lastname_t = $row[3];
         $costcenter_code = $row[4];
         $plgroup = $row[5];
-        // $name_title_e = $row[4];
-        // $firstname_e = $row[5];
-        // $lastname_e = $row[6];
-        // $costcenter_code = $row[7];
-        // $section = $row[8];
-        // $department = $row[9];
-        // $position = $row[10];
-        // $email = $row[11];
-        // $mobile = $row[12];
-        // $isshift = $row[13];
-        // $emplevel = $row[14];
-        // $companyno = $row[15];
-        // $boss = $row[16];
-        // $phonework = $row[17];
-        // $phonehome = $row[18];
-        // $hotline = $row[19];
-        // $houseno = $row[20];
-        // $plgroup = $row[21];
-        // $function = $row[22];
-        // $idcard = $row[23];
-        // $nickname = $row[24];
-        // $subsection = $row[25];
-        // $division = $row[26];
+        
 
-    
         // Check if costcenter exists
         $costcenterQuery = "SELECT cost_center_id FROM costcenter WHERE cost_center_code = ?";
         $costcenterParams = [$costcenter_code];
