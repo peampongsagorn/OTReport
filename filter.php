@@ -92,9 +92,6 @@ if (isset($_POST['submit'])) {
                                 </div>
                             </div>
 
-
-
-
                             <div class="row" style="margin-bottom: 10px">
                                 <div class="col-md-6 col-sm-12">
                                     <label class="form-label">Division:</label>
@@ -109,7 +106,6 @@ if (isset($_POST['submit'])) {
                                     </select>
                                 </div>
                             </div>
-
 
                             <div class="row" style="margin-bottom: 10px">
                                 <div class="col-md-6 col-sm-12">

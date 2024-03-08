@@ -47,8 +47,6 @@ if (isset($_POST['save_excel_data'])) {
     }
     // echo "<script>alert('Data uploaded successfully!')</script>";
     echo "<script>alert('Data uploaded successfully!'); window.location.href = 'dashboard.php';</script>";
-
-
 }
 
 
@@ -176,29 +174,31 @@ function processEmployeeFile($data, $conn) {
         $name_title_t = $row[1];
         $firstname_t = $row[2];
         $lastname_t = $row[3];
-        $name_title_e = $row[4];
-        $firstname_e = $row[5];
-        $lastname_e = $row[6];
-        $costcenter_code = $row[7];
-        $section = $row[8];
-        $department = $row[9];
-        $position = $row[10];
-        $email = $row[11];
-        $mobile = $row[12];
-        $isshift = $row[13];
-        $emplevel = $row[14];
-        $companyno = $row[15];
-        $boss = $row[16];
-        $phonework = $row[17];
-        $phonehome = $row[18];
-        $hotline = $row[19];
-        $houseno = $row[20];
-        $plgroup = $row[21];
-        $function = $row[22];
-        $idcard = $row[23];
-        $nickname = $row[24];
-        $subsection = $row[25];
-        $division = $row[26];
+        $costcenter_code = $row[4];
+        $plgroup = $row[5];
+        // $name_title_e = $row[4];
+        // $firstname_e = $row[5];
+        // $lastname_e = $row[6];
+        // $costcenter_code = $row[7];
+        // $section = $row[8];
+        // $department = $row[9];
+        // $position = $row[10];
+        // $email = $row[11];
+        // $mobile = $row[12];
+        // $isshift = $row[13];
+        // $emplevel = $row[14];
+        // $companyno = $row[15];
+        // $boss = $row[16];
+        // $phonework = $row[17];
+        // $phonehome = $row[18];
+        // $hotline = $row[19];
+        // $houseno = $row[20];
+        // $plgroup = $row[21];
+        // $function = $row[22];
+        // $idcard = $row[23];
+        // $nickname = $row[24];
+        // $subsection = $row[25];
+        // $division = $row[26];
 
     
         // Check if costcenter exists
@@ -217,24 +217,17 @@ function processEmployeeFile($data, $conn) {
             if ($employeeStmt && sqlsrv_fetch_array($employeeStmt, SQLSRV_FETCH_ASSOC)) {
                 // Update existing employee
                 $updateQuery = "UPDATE employee SET NAMETITLE_T = ?,
-                                    FIRSTNAME_T = ?, LASTNAME_T = ?, NAMETITLE_E = ?, FIRSTNAME_E = ?, LASTNAME_E = ?, SECTION = ? ,DEPARTMENT = ?, POSITION = ?, 
-                                    EMAIL = ?, MOBILE = ?, ISSHIFT = ?, EMPLEVEL = ?, COMPANYNO = ?, BOSS = ?, PHONEWORK = ?, PHONEHOME = ?, HOTLINE = ?, 
-                                    HOUSENO = ?, PLGROUP = ?, FUNCTION_EMP = ?, IDCARD = ?, NICKNAME_T =?, SUBSECTION = ?, DIVISION =?, CostcenterID = ? WHERE employee_id = ?";
-                $updateParams = [$name_title_t, $firstname_t, $lastname_t, $name_title_e, $firstname_e, $lastname_e, $section, $department, $position, $email,
-                                $mobile, $isshift, $emplevel, $companyno, $boss, $phonework, $phonehome, $hotline, $houseno, $plgroup, $function, $idcard,
-                                $nickname, $subsection, $division, $costcenter_id ,$employee_id];
+                                    FIRSTNAME_T = ?, LASTNAME_T = ?,PLGROUP = ?, CostcenterID = ? WHERE employee_id = ?";
+                $updateParams = [$name_title_t, $firstname_t, $lastname_t, $plgroup, $costcenter_id ,$employee_id];
                 $updateStmt = sqlsrv_query($conn, $updateQuery, $updateParams);
                 if (!$updateStmt) {
                     die("Error while updating data: " . print_r(sqlsrv_errors(), true));
                 }
             } else {
                 // Insert new employee
-                $insertQuery = "INSERT INTO employee (employee_id, NAMETITLE_T, FIRSTNAME_T, LASTNAME_T, NAMETITLE_E, FIRSTNAME_E, LASTNAME_E, SECTION, DEPARTMENT,
-                                            POSITION, EMAIL, MOBILE, ISSHIFT, EMPLEVEL, COMPANYNO, BOSS, PHONEWORK, PHONEHOME, HOTLINE, HOUSENO, 
-                                            PLGROUP, FUNCTION_EMP, IDCARD, NICKNAME_T, SUBSECTION, DIVISION, CostcenterID) VALUES (?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?, ?, ?, ?, ?)";
-                $insertParams = [$employee_id, $name_title_t, $firstname_t, $lastname_t, $name_title_e, $firstname_e, $lastname_e, $section, $department, $position, $email,
-                                    $mobile, $isshift, $emplevel, $companyno, $boss, $phonework, $phonehome, $hotline, $houseno, $plgroup, $function, $idcard,
-                                    $nickname, $subsection, $division, $costcenter_id];
+                $insertQuery = "INSERT INTO employee (employee_id, NAMETITLE_T, FIRSTNAME_T, LASTNAME_T,
+                                            PLGROUP, CostcenterID) VALUES (?, ?, ?, ?, ?, ?)";
+                $insertParams = [$employee_id, $name_title_t, $firstname_t, $lastname_t, $plgroup, $costcenter_id];
                 $insertStmt = sqlsrv_query($conn, $insertQuery, $insertParams);
                 if (!$insertStmt) {
                     die("Error while inserting data: " . print_r(sqlsrv_errors(), true));
