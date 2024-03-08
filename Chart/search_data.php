@@ -21,27 +21,21 @@ function getEntityNameById($conn, $table, $id, $idField, $nameField)
     if (empty($id)) {
         return null;
     }
-
     $sql = "SELECT {$nameField} FROM {$table} WHERE {$idField} = ?";
     $params = array($id);
     $stmt = sqlsrv_query($conn, $sql, $params);
-
     if ($stmt === false) {
         die(print_r(sqlsrv_errors(), true));
     }
-
     if ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
         return $row[$nameField];
     }
-
     return null;
 }
-
 // ตรวจสอบข้อมูลใน $_SESSION['filter'] และ query ข้อมูล
 if (isset($_SESSION['filter'])) {
     $filters = $_SESSION['filter'];
     $entities = [
-
         'divisionId' => ['table' => 'division', 'idField' => 'division_id', 'nameField' => 'name'],
         'departmentId' => ['table' => 'department', 'idField' => 'department_id', 'nameField' => 'name'],
         'sectionId' => ['table' => 'section', 'idField' => 'section_id', 'nameField' => 'name'],
