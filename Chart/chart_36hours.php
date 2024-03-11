@@ -251,7 +251,7 @@ usort($employeeOTData, function ($a, $b) {
                     maintainAspectRatio: false,
                     title: {
                         display: true,
-                        text: 'OT > 36 Hours per Week'
+                        text: 'OT > 36 Hours per Week (ครั้ง)'
                     },
                     plugins: {
                     datalabels: {
