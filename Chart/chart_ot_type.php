@@ -101,7 +101,7 @@ while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
 
 <script>
     function formatHours(value) {
-        return value >= 1000 ? (value / 1000).toFixed(1) + 'K Hrs' : value + ' Hrs';
+        return value.toLocaleString() + ' Hrs';
     }
 
     document.addEventListener('DOMContentLoaded', function() {
