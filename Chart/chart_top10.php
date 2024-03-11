@@ -9,11 +9,13 @@ $filterData = $_SESSION['filter'] ?? null;
 
 // ตั้งค่าเงื่อนไขค้นหาเริ่มต้น
 $sqlConditions_actual = "date BETWEEN '{$currentYear}-01-01' AND '{$currentDate}'";
+$sqlConditions_date = "date BETWEEN '{$currentYear}-01-01' AND '{$currentDate}'";
+
 
 if ($filterData) {
 
     if (!empty($filterData['startMonthDate']) && !empty($filterData['endMonthDateCurrent'])) {
-        $sqlConditions_actual = "date BETWEEN '{$filterData['startMonthDate']}' AND '{$filterData['endMonthDateCurrent']}'";
+        $sqlConditions_date = "date BETWEEN '{$filterData['startMonthDate']}' AND '{$filterData['endMonthDateCurrent']}'";
     }
 
     if (!empty($filterData['sectionId'])) {
@@ -57,6 +59,8 @@ $sql = "SELECT
                     SUM(attendance_hours) as weekly_hours
                 FROM 
                     ot_record
+                WHERE 
+                    {$sqlConditions_date}
                 GROUP BY 
                     employee_id, 
                     DATEPART(ISO_WEEK, date)
@@ -72,7 +76,8 @@ $sql = "SELECT
             e.employee_id, 
             CONCAT(e.FIRSTNAME_T, ' ', e.LASTNAME_T),
             d.s_name,
-            s.s_name ";
+            s.s_name 
+        ORDER BY TOTAL_HOURS DESC";
 
 $stmt = sqlsrv_query($conn, $sql);
 if ($stmt === false) {
@@ -164,9 +169,7 @@ unset($employee); // ลบการอ้างอิงเมื่อเส�
             border: 2px solid #3E4080;
             box-shadow: 2px 4px 5px #3E4080;
             border-radius: 25px;
-        }   
-
-
+        }
     </style>
 
 </head>
@@ -175,11 +178,15 @@ unset($employee); // ลบการอ้างอิงเมื่อเส�
     <link rel="stylesheet" href="https://cdn.datatables.net/2.0.1/css/dataTables.dataTables.css" />
     <script src="https://cdn.datatables.net/2.0.1/js/dataTables.js"></script>
     <div class="chart-container-table">
+        <div class="table-title" style="text-align: center; margin-top: 20px;">
+            <h1 style="font-size: 18px; color: #757575;">Top 10 Employees Most OT Hours</h1>
+        </div>
         <div class="dataTables_top">
             <div class="dataTables_length"></div>
             <div class="dataTables_filter"></div>
         </div>
         <table class="data-table table striped hover nowrap" style="width: 100%; border-collapse: collapse; border: 2px solid #3E4080; box-shadow: 2px 4px 5px #3E4080; height: 100%; margin-top:10px">
+
             <thead style="background-color: #1C1D3A; color: white;">
                 <tr>
                     <th>Full Name</th>
@@ -213,33 +220,32 @@ unset($employee); // ลบการอ้างอิงเมื่อเส�
 
 <script>
     $(document).ready(function() {
-    $('.data-table').DataTable({
-        scrollCollapse: true,
-        autoWidth: false,
-        responsive: true,
-        columnDefs: [{
-            targets: "datatable-nosort",
-            orderable: false,
-        }],
-        "lengthMenu": [
-            [10, 20, 35, -1],
-            [10, 20, 35, "ทั้งหมด"]
-        ],
-        "language": {
-            "info": "หน้า _START_ - _END_ จากทั้งหมด _TOTAL_ รายการ",
-            "lengthMenu": "แสดง _MENU_ รายการ",
-            "search": "<span style='color: #7a7a7a'><i class='fa-solid fa-magnifying-glass'></i> ค้นหา:</span>",
-            "paginate": {
-                "next": '▶',
-                "previous": '◀'
-            },
-            "infoEmpty": "ไม่มีรายการที่แสดง",
-            "infoFiltered": "(กรองจากทั้งหมด _MAX_ รายการ)",
-            searchPlaceholder: "ค้นหา",
-        }
+        $('.data-table').DataTable({
+            scrollCollapse: true,
+            autoWidth: false,
+            responsive: true,
+            columnDefs: [{
+                targets: "datatable-nosort",
+                orderable: false,
+            }],
+            "lengthMenu": [
+                [10, 20, 35, -1],
+                [10, 20, 35, "ทั้งหมด"]
+            ],
+            "language": {
+                "info": "หน้า _START_ - _END_ จากทั้งหมด _TOTAL_ รายการ",
+                "lengthMenu": "แสดง _MENU_ รายการ",
+                "search": "<span style='color: #7a7a7a'><i class='fa-solid fa-magnifying-glass'></i> ค้นหา:</span>",
+                "paginate": {
+                    "next": '▶',
+                    "previous": '◀'
+                },
+                "infoEmpty": "ไม่มีรายการที่แสดง",
+                "infoFiltered": "(กรองจากทั้งหมด _MAX_ รายการ)",
+                searchPlaceholder: "ค้นหา",
+            }
+        });
     });
-});
-
-
 </script>
+
 </html>
