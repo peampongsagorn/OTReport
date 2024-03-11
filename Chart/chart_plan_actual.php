@@ -305,7 +305,7 @@ if ($result) {
                         anchor: 'end', 
                         align: 'top',
                         formatter: function(value) {
-                            return value.toFixed(2);
+                            return value.toLocaleString() + ' Hrs';
                         }
                     }
                 }, {
