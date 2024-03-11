@@ -48,7 +48,7 @@ session_start();
                                     </div>
                                 </div>
                                 <div class="col-md-3 mb-2 d-flex">
-                                    <div class="card custom-card text-white" style="background-color: #41446B ; flex-grow: 1; border-radius: 15px; box-shadow: 2px 4px 5px <?php echo $colorClass ?>">
+                                    <div class="card custom-card text-white" style="background-color: <?php echo $colorClass ?> ; flex-grow: 1; border-radius: 15px; box-shadow: 2px 4px 5px #3E4080">
                                         <div class="card-header text-center" style="background-color: #313456; border-top-right-radius: 15px; border-top-left-radius: 15px;">
                                             Percentage Difference </br> (Varience)
                                         </div>
