@@ -156,12 +156,12 @@ $chartDataJson = json_encode($chartData);
     <script>
         var chartData = <?php echo $chartDataJson; ?>;
         var colors = [
-            'rgba(255, 99, 132, 0.4)',
             'rgba(54, 162, 235, 0.4)',
-            'rgba(255, 206, 86, 0.4)',
-            'rgba(75, 192, 192, 0.4)', 
-            'rgba(153, 102, 255, 0.4)', 
-            'rgba(255, 159, 64, 0.4)' 
+            'rgba(54, 162, 235, 0.4)',
+            'rgba(54, 162, 235, 0.4)',
+            'rgba(54, 162, 235, 0.4)',
+            'rgba(54, 162, 235, 0.4)',
+            'rgba(54, 162, 235, 0.4)'
         ];
         var ctx = document.getElementById('barChart').getContext('2d');
         var barChart = new Chart(ctx, {
@@ -171,7 +171,7 @@ $chartDataJson = json_encode($chartData);
                     return item.name;
                 }),
                 datasets: [{
-                    label: 'Average OT Per Person',
+                    label: 'Average OT Per Person Actual',
                     data: chartData.map(function(item) {
                         return item.average_ot;
                     }), 
@@ -200,6 +200,10 @@ $chartDataJson = json_encode($chartData);
                         }
                     }
                 },
+                title: {
+                        display: true,
+                        text: 'Average OT Per Person Actual'
+                    },
                 responsive: true,
                 maintainAspectRatio: false
             }
