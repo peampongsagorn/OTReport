@@ -224,9 +224,12 @@ unset($employee); // ลบการอ้างอิงเมื่อเส�
             scrollCollapse: true,
             autoWidth: false,
             responsive: true,
+            order: [[2, 'desc']], 
             columnDefs: [{
                 targets: "datatable-nosort",
                 orderable: false,
+                targets: 2, 
+                type: 'numeric', // สมมติว่า TOTAL_HOURS อยู่ในคอลัมน์ที่ 2 (เริ่มนับจาก 0)
             }],
             "lengthMenu": [
                 [10, 20, 35, -1],
