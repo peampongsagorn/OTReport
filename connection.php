@@ -1,10 +1,10 @@
 <?php
-$serverName = "52.139.193.40, 3511"; // แก้ตรงนี้
+$serverName = "ip, port"; // แก้ตรงนี้
 $connectionOptions = array(
-    "Database" => "OTReport", 
-    "Uid" => "follow", 
-    "PWD" => "Follow@2022",
-    "CharacterSet" => "UTF-8"
+    "Database" => "", 
+    "Uid" => "", 
+    "PWD" => "",
+    "CharacterSet" => ""
 );
 
 // Establishes the connection เชื่อมต่อ SQL Server
